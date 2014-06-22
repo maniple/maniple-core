@@ -11,6 +11,11 @@ class ManipleCore_Helper_ImageHelper
     protected $_storageDir;
 
     /**
+     * @var string[]
+     */
+    protected $_allowedDimensions;
+
+    /**
      * @param  string $path
      * @return ManipleCore_Helper_ImageHelper
      * @throws Exception
@@ -50,6 +55,33 @@ class ManipleCore_Helper_ImageHelper
     } // }}}
 
     /**
+     * Set allowed dimensions when resizing an image.
+     *
+     * @param  array|string $dimensions
+     * @return ManipleCore_Helper_ImageHelper
+     */
+    public function setAllowedDimensions($dimensions) // {{{
+    {
+        $allowedDimensions = array();
+        foreach ((array) $dimensions as $value) {
+            if (!preg_match('/^(?P<width>\d+)x(?P<height>\d+)$/i', $value, $match)) {
+                throw new InvalidArgumentException(sprintf('Invalid dimension spec: %s', $value));
+            }
+            $allowedDimensions[] = $match['width'] . 'x' . $match['height'];
+        }
+        $this->_allowedDimensions = $allowedDimensions;
+        return $this;
+    } // }}}
+
+    /**
+     * @return string[]
+     */
+    public function getAllowedDimensions() // {{{
+    {
+        return (array) $this->_allowedDimensions;
+    } // }}}
+
+    /**
      * @param  string $filename
      * @param  array $options OPTIONAL
      * @return string
@@ -59,6 +91,8 @@ class ManipleCore_Helper_ImageHelper
     public function getImagePath($filename, array $options = null) // {{{
     {
         if (strlen($filename) && is_file($filename) && is_readable($filename)) {
+            $filename = realpath($filename);
+
             $width = $height = 0;
 
             if (isset($options['width'])) {
@@ -70,6 +104,11 @@ class ManipleCore_Helper_ImageHelper
 
             // if width and height were not given return original image
             if ($width + $height == 0) {
+                return $filename;
+            }
+
+            // if invalid dimensions return original image
+            if ($this->_allowedDimensions && !in_array("{$width}x{$height}", $this->_allowedDimensions, true)) {
                 return $filename;
             }
 
