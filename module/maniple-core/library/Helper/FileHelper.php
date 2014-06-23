@@ -21,11 +21,11 @@ class ManipleCore_Helper_FileHelper
         }
 
         if (empty($path) || !is_file($path)) {
-            throw new Maniple_Controller_NotFoundException;
+            throw new ManipleCore_Controller_NotFoundException;
         }
 
         if (!is_readable($path)) {
-            throw new Maniple_Controller_NotAllowedException;
+            throw new ManipleCore_Controller_NotAllowedException;
         }
 
         $headers = array();
