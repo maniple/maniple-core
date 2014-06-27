@@ -86,7 +86,7 @@ class ManipleCore_Helper_ImageHelper
      * @param  array $options OPTIONAL
      * @return string
      * @throws Zefram_Image_Exception
-     * @throws Maniple_Controller_NotFoundException
+     * @throws ManipleCore_Controller_NotFoundException
      */
     public function getImagePath($filename, array $options = null) // {{{
     {
@@ -150,7 +150,7 @@ class ManipleCore_Helper_ImageHelper
             return $thumb;
         }
 
-        throw new Maniple_Controller_NotFoundException('Image file not found');
+        throw new ManipleCore_Controller_NotFoundException('Image file not found');
     } // }}}
 
     /**
