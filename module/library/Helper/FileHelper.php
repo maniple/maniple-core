@@ -33,7 +33,7 @@ class ManipleCore_Helper_FileHelper
         $last_modified = filemtime($path);
 
         if (isset($options['cache']) && $options['cache']) {
-            $response->setHeader('Cache-Control', 'public, must-revalidate');
+            $response->setHeader('Cache-Control', 'public, must-revalidate', true);
         }
 
         $if_modified_since = $request->getServer('HTTP_IF_MODIFIED_SINCE');
@@ -54,20 +54,20 @@ class ManipleCore_Helper_FileHelper
             $type = 'application/octet-stream';
         }
 
-        $response->setHeader('Content-Type', $type);
+        $response->setHeader('Content-Type', $type, true);
         $response->setHeader('Content-Transfer-Encoding', 'binary');
-        $response->setHeader('Last-Modified', gmdate('r', $last_modified));
+        $response->setHeader('Last-Modified', gmdate('r', $last_modified), true);
 
         if (isset($options['name'])) {
             $filename = $options['name'];
-            $response->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"');
+            $response->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"', true);
         }
 
         if (isset($options['etag'])) {
             $response->setHeader('ETag', $options['etag']);
         }
 
-        $response->setHeader('Content-Length', filesize($path));
+        $response->setHeader('Content-Length', filesize($path), true);
 
         $response->sendHeaders();
 
