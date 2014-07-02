@@ -6,6 +6,8 @@ class ManipleCore_Model_User extends Maniple_Model_Model implements ManipleCore_
 
     protected $_username;
 
+    protected $_password;
+
     protected $_email;
 
     protected $_firstName;
