@@ -75,9 +75,9 @@ class ManipleCore_Model_UserRepository implements ManipleCore_Model_UserReposito
     {
         $usernameOrEmail = (string) $usernameOrEmail;
 
-        // usernames and emails are expected to be stored lowercase only
+        // usernames and emails are required to be stored lowercase only
         $row = $this->_getUsersTable()->fetchRow(array(
-            'username = ? OR email = ?' => mb_strtolower($usernameOrEmail),
+            'username = LOWER(?) OR email = LOWER(?)' => $usernameOrEmail,
         ));
         if ($row) {
             return $this->_createUser($row->toArray());
