@@ -13,7 +13,7 @@ class ManipleCore_Validate_UserExists extends ManipleCore_Validate_User
         $this->_user = $this->_getUserByValue($value);
 
         if (empty($this->_user)) {
-            $this->_error(self::USER_NOT_FOUND);
+            $this->_error(self::USER_NOT_EXISTS);
             return false;
         }
 

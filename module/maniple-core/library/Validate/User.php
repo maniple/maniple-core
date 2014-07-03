@@ -7,8 +7,8 @@ abstract class ManipleCore_Validate_User extends Zend_Validate_Abstract
     const MATCH_USERNAME          = 'username';
     const MATCH_USERNAME_OR_EMAIL = 'usernameOrEmail';
 
-    const USER_NOT_FOUND    = 'errorUserNotFound';
-    const USER_FOUND        = 'errorUserFound';
+    const USER_NOT_EXISTS = 'userNotExists';
+    const USER_EXISTS     = 'userExists';
 
     /**
      * @var ManipleCore_Model_UserRepositoryInterface
