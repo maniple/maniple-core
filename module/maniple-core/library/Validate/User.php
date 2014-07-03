@@ -123,6 +123,14 @@ abstract class ManipleCore_Validate_User extends Zend_Validate_Abstract
                 $user = $this->getUserRepository()->getUser($value);
                 break;
 
+            case self::MATCH_EMAIL:
+                $user = $this->getUserRepository()->getUserByEmail($value);
+                break;
+
+            case self::MATCH_USERNAME:
+                $user = $this->getUserRepository()->getUserByUsername($value);
+                break;
+
             case self::MATCH_USERNAME_OR_EMAIL:
                 $user = $this->getUserRepository()->getUserByUsernameOrEmail($value);
                 break;
