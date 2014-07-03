@@ -7,8 +7,8 @@ abstract class ManipleCore_Validate_User extends Zend_Validate_Abstract
     const MATCH_USERNAME          = 'username';
     const MATCH_USERNAME_OR_EMAIL = 'usernameOrEmail';
 
-    const ERROR_USER_NOT_FOUND    = 'errorUserNotFound';
-    const ERROR_USER_FOUND        = 'errorUserFound';
+    const USER_NOT_FOUND    = 'errorUserNotFound';
+    const USER_FOUND        = 'errorUserFound';
 
     /**
      * @var ManipleCore_Model_UserRepositoryInterface
@@ -26,8 +26,8 @@ abstract class ManipleCore_Validate_User extends Zend_Validate_Abstract
     protected $_matchBy = self::MATCH_ID;
 
     protected $_messageTemplates = array(
-        self::ERROR_USER_NOT_FOUND => 'No matching user was found',
-        self::ERROR_USER_FOUND     => 'A matching user was found',
+        self::USER_NOT_FOUND => 'No matching user was found',
+        self::USER_FOUND     => 'A matching user was found',
     );
 
     protected $_messageVariables = array(
