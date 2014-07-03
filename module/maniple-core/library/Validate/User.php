@@ -26,8 +26,8 @@ abstract class ManipleCore_Validate_User extends Zend_Validate_Abstract
     protected $_matchBy = self::MATCH_ID;
 
     protected $_messageTemplates = array(
-        self::USER_NOT_FOUND => 'No matching user was found',
-        self::USER_FOUND     => 'A matching user was found',
+        self::USER_NOT_EXISTS => 'No matching user was found',
+        self::USER_EXISTS     => 'A matching user was found',
     );
 
     protected $_messageVariables = array(
