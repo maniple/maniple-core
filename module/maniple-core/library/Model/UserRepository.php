@@ -39,57 +39,122 @@ class ManipleCore_Model_UserRepository implements ManipleCore_Model_UserReposito
 
     /**
      * @param  int $userId
-     * @return ManipleCore_Model_UserInterface
+     * @return ManipleCore_Model_UserInterface|null
      */
     public function getUser($userId)
     {
         $userId = (int) $userId;
         $row = $this->_getUsersTable()->findRow($userId);
         if ($row) {
-            return $this->_createUser($row->toArray());
+            return $this->createUser($row->toArray());
         }
         return null;
+    }
+
+    /**
+     * @param  string $username
+     * @return ManipleCore_Model_UserInterface|null
+     */
+    public function getUserByUsername($username)
+    {
+        $username = (string) $username;
+        return $this->_getUserBy(array('username = LOWER(?)' => $username));
+    }
+
+    /**
+     * @param  string $email
+     * @return ManipleCore_Model_UserInterface|null
+     */
+    public function getUserByEmail($email)
+    {
+        $email = (string) $email;
+        return $this->_getUserBy(array('email = LOWER(?)' => $email));
+    }
+
+    /**
+     * @param  string $usernameOrEmail
+     * @return ManipleCore_Model_UserInterface|null
+     */
+    public function getUserByUsernameOrEmail($usernameOrEmail)
+    {
+        $usernameOrEmail = (string) $usernameOrEmail;
+
+        // usernames and emails are required to be stored lowercase only
+        return $this->_getUserBy(array(
+            'username = LOWER(?) OR email = LOWER(?)' => $usernameOrEmail,
+        ));
     }
 
     /**
      * @param  array $userIds
      * @return ManipleCore_Model_UserInterface[]
      */
-    public function getUsers(array $userIds)
+    public function getUsers(array $userIds = null)
     {
         $userIds = array_map('intval', $userIds);
         $users = array();
 
         if ($userIds) {
-            $rows = $this->_getUsersTable()->fetchAll(array('user_id IN (?)' => $userIds));
-            foreach ($rows as $row) {
-                $user = $this->_createUser($row->toArray());
-                $users[$user->getId()] = $user;
-            }
+            $where = array('user_id IN (?)' => $userIds);
+        } else {
+            $where = null;
+        }
+
+        $rows = $this->_getUsersTable()->fetchAll($where);
+        foreach ($rows as $row) {
+            $user = $this->createUser($row->toArray());
+            $users[$user->getId()] = $user;
         }
 
         return $users;
     }
 
-    public function getUserByUsernameOrEmail($usernameOrEmail)
+    /**
+     * Saves user entity to the storage.
+     *
+     * @param  ManipleCore_Model_UserInterface $user
+     * @return ManipleCore_Model_UserInterface
+     * @throws Exception
+     */
+    public function saveUser(ManipleCore_Model_UserInterface $user)
     {
-        $usernameOrEmail = (string) $usernameOrEmail;
+        $userId = (int) $user->getId();
 
-        // usernames and emails are required to be stored lowercase only
-        $row = $this->_getUsersTable()->fetchRow(array(
-            'username = LOWER(?) OR email = LOWER(?)' => $usernameOrEmail,
-        ));
-        if ($row) {
-            return $this->_createUser($row->toArray());
+        if ($userId) {
+            $row = $this->_getUsersTable()->findRow($userId);
         }
-        return null;
+
+        if (empty($row)) {
+            $row = $this->_getUsersTable()->createRow();
+            $isCreate = true;
+        } else {
+            $isCreate = false;
+        }
+
+        $data = Zefram_Stdlib_ArrayUtils::changeKeyCase(
+            $user->toArray(),
+            Zefram_Stdlib_ArrayUtils::CASE_UNDERSCORE
+        );
+
+        if ($isCreate) {
+            $data['user_id'] = null; // ensure auto incrementation
+        }
+
+        $row->setFromArray($data);
+        $row->save();
+
+        $user->setFromArray($row->toArray());
+
+        return $user;
     }
 
     /**
-     * @param  array $data
+     * Creates a new instance of user entity.
+     *
+     * @param  array $data OPTIONAL
      * @return ManipleCore_Model_UserInterface
      */
-    protected function _createUser(array $data)
+    public function createUser(array $data = null)
     {
         $userClass = $this->_userClass;
         $user = new $userClass($data);
@@ -102,5 +167,18 @@ class ManipleCore_Model_UserRepository implements ManipleCore_Model_UserReposito
     protected function _getUsersTable()
     {
         return $this->_tableProvider->getTable('ManipleCore_Model_DbTable_Users');
+    }
+
+    /**
+     * @param  string|array|Zend_Db_Expr $where
+     * @return ManipleCore_Model_UserInterface|null
+     */
+    protected function _getUserBy($where)
+    {
+        $row = $this->_getUsersTable()->fetchRow($where);
+        if ($row) {
+            return $this->createUser($row->toArray());
+        }
+        return null;
     }
 }
