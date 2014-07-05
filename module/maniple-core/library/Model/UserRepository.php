@@ -118,10 +118,10 @@ class ManipleCore_Model_UserRepository implements ManipleCore_Model_UserReposito
      */
     public function getUsers(array $userIds = null)
     {
-        $userIds = array_map('intval', $userIds);
         $users = array();
 
         if ($userIds) {
+            $userIds = array_map('intval', $userIds);
             $where = array('user_id IN (?)' => $userIds);
         } else {
             $where = null;
@@ -148,7 +148,7 @@ class ManipleCore_Model_UserRepository implements ManipleCore_Model_UserReposito
         $userId = $user->getId();
 
         if ($userId) {
-            $row = $this->_getUsersTable()->findRow($userId);
+            $row = $this->_getUsersTable()->findRow((int) $userId);
         }
 
         if (empty($row)) {
