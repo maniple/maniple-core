@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Zend_Db_Table based user repository.
+ *
+ * @package ManipleCore_Model
+ * @version 2014-07-05
+ * @uses    Zend_Db_Table
+ * @uses    Zefram_Stdlib
+ */
 class ManipleCore_Model_UserRepository implements ManipleCore_Model_UserRepositoryInterface
 {
     /**
@@ -12,6 +20,10 @@ class ManipleCore_Model_UserRepository implements ManipleCore_Model_UserReposito
      */
     protected $_tableProvider;
 
+    /**
+     * @param  string $userClass
+     * @return ManipleCore_Model_UserRepository
+     */
     public function setUserClass($userClass)
     {
         $userClass = (string) $userClass;
@@ -46,7 +58,7 @@ class ManipleCore_Model_UserRepository implements ManipleCore_Model_UserReposito
         $userId = (int) $userId;
         $row = $this->_getUsersTable()->findRow($userId);
         if ($row) {
-            return $this->createUser($row->toArray());
+            return $this->_setUserFromRow($this->createUser(), $row);
         }
         return null;
     }
@@ -102,7 +114,7 @@ class ManipleCore_Model_UserRepository implements ManipleCore_Model_UserReposito
 
         $rows = $this->_getUsersTable()->fetchAll($where);
         foreach ($rows as $row) {
-            $user = $this->createUser($row->toArray());
+            $user = $this->_setUserFromRow($this->createUser(), $row);
             $users[$user->getId()] = $user;
         }
 
@@ -118,7 +130,7 @@ class ManipleCore_Model_UserRepository implements ManipleCore_Model_UserReposito
      */
     public function saveUser(ManipleCore_Model_UserInterface $user)
     {
-        $userId = (int) $user->getId();
+        $userId = $user->getId();
 
         if ($userId) {
             $row = $this->_getUsersTable()->findRow($userId);
@@ -137,15 +149,21 @@ class ManipleCore_Model_UserRepository implements ManipleCore_Model_UserReposito
         );
 
         if ($isCreate) {
-            $data['user_id'] = null; // ensure auto incrementation
+            // disallow explicitly setting value on auto increment column, as
+            // in some DBMS write may fail if sequence reaches value that is
+            // already present in the table
+            $sequence = $row->getTable()->info(Zend_Db_Table_Abstract::SEQUENCE);
+            foreach ($row->getPrimaryKey() as $column => $value) {
+                if ($sequence === true || $sequence === $column) {
+                    unset($data[$column]);
+                }
+            }
         }
 
         $row->setFromArray($data);
         $row->save();
 
-        $user->setFromArray($row->toArray());
-
-        return $user;
+        return $this->_setUserFromRow($user, $row);
     }
 
     /**
@@ -162,14 +180,6 @@ class ManipleCore_Model_UserRepository implements ManipleCore_Model_UserReposito
     }
 
     /**
-     * @return ManipleCore_Model_DbTable_Users
-     */
-    protected function _getUsersTable()
-    {
-        return $this->_tableProvider->getTable('ManipleCore_Model_DbTable_Users');
-    }
-
-    /**
      * @param  string|array|Zend_Db_Expr $where
      * @return ManipleCore_Model_UserInterface|null
      */
@@ -177,8 +187,34 @@ class ManipleCore_Model_UserRepository implements ManipleCore_Model_UserReposito
     {
         $row = $this->_getUsersTable()->fetchRow($where);
         if ($row) {
-            return $this->createUser($row->toArray());
+            return $this->_setUserFromRow($this->createUser(), $row);
         }
         return null;
+    }
+
+    /**
+     * @return ManipleCore_Model_DbTable_Users
+     * @internal
+     */
+    protected function _getUsersTable()
+    {
+        return $this->_tableProvider->getTable('ManipleCore_Model_DbTable_Users');
+    }
+
+    /**
+     * @param  ManipleCore_Model_UserInterface $user
+     * @param  Zend_Db_Table_Row_Abstract $row
+     * @return ManipleCore_Model_UserInterface
+     * @internal
+     */
+    protected function _setUserFromRow(ManipleCore_Model_UserInterface $user, Zend_Db_Table_Row_Abstract $row)
+    {
+        // call reset() without warning on function result
+        $primaryKey = call_user_func('reset', $row->getPrimaryKey());
+
+        $user->setFromArray($row->toArray());
+        $user->setId($primaryKey);
+
+        return $user;
     }
 }

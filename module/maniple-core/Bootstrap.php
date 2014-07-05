@@ -15,7 +15,8 @@ class ManipleCore_Bootstrap extends Zend_Application_Module_Bootstrap
                 'class' => 'ManipleCore_Model_UserRepository',
                 'params' => array(
                     'tableProvider' => null,
-                )
+                    'userClass'     => 'ManipleCore_Model_User',
+                ),
             )
         );
     }
