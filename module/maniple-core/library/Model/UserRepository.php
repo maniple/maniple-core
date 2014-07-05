@@ -21,6 +21,11 @@ class ManipleCore_Model_UserRepository implements ManipleCore_Model_UserReposito
     protected $_tableProvider;
 
     /**
+     * @var Zend_Cache_Core
+     */
+    protected $_cache;
+
+    /**
      * @param  string $userClass
      * @return ManipleCore_Model_UserRepository
      */
@@ -46,6 +51,16 @@ class ManipleCore_Model_UserRepository implements ManipleCore_Model_UserReposito
     public function setTableProvider(Zefram_Db_TableProvider $tableProvider = null)
     {
         $this->_tableProvider = $tableProvider;
+        return $this;
+    }
+
+    /**
+     * @param  Zend_Cache_Core $cache
+     * @return ManipleCore_Model_UserRepository
+     */
+    public function setCache(Zend_Cache_Core $cache = null)
+    {
+        $this->_cache = $cache;
         return $this;
     }
 
