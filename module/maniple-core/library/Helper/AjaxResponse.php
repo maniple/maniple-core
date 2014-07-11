@@ -25,7 +25,7 @@ class ManipleCore_Helper_AjaxResponse
         return $this;
     }
 
-    /** 
+    /**
      * @return int
      */
     public function getHttpCode()
@@ -104,7 +104,7 @@ class ManipleCore_Helper_AjaxResponse
      * @return string
      */
     public function toString()
-    {    
+    {
         return Zefram_Json::encode($this->_response);
     }
 
