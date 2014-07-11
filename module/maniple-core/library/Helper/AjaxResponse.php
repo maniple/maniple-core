@@ -100,21 +100,43 @@ class ManipleCore_Helper_AjaxResponse
         return $this;
     }
 
-    public function __toString()
-    {
+    /**
+     * @return string
+     */
+    public function toString()
+    {    
         return Zefram_Json::encode($this->_response);
     }
 
+    /**
+     * @return string
+     */
     public function getContentType()
     {
         return 'application/json';
     }
 
+    /**
+     * Proxies to {@link toString()}.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->toString();
+    }
+
+    /**
+     * @param  Zend_Controller_Response_Http $response
+     * @return void
+     */
     public function send(Zend_Controller_Response_Http $response)
     {
+        $response->renderExceptions(false);
+
         $response->setHttpResponseCode($this->getHttpCode());
         $response->setHeader('Content-Type', $this->getContentType());
-        $response->setBody((string) $this);
+        $response->setBody($this->toString());
 
         $response->sendHeaders();
         $response->sendResponse();
