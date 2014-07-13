@@ -6,7 +6,11 @@ class ManipleCore_Bootstrap extends Maniple_Application_ModuleBootstrap
     {
         $moduleBootstraper->bootstrapModule('maniple-vendor-assets');
 
-        $view = $moduleBootstraper->getBootstrap()->bootstrap('view')->getResource('view');
+        $bootstrap = $moduleBootstraper->getBootstrap();
+        $bootstrap->bootstrap('request');
+        $bootstrap->bootstrap('view');
+
+        $view = $bootstrap->getResource('view');
         $view->headScript()->appendScript(sprintf(
             'require.config(%s)',
             Zefram_Json::encode(
