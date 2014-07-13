@@ -1,4 +1,5 @@
 {
     "name": "maniple-core",
-    "moduleDirName": "maniple-core"
+    "moduleDirName": "maniple-core",
+    "assetsDirName": "core"
 }
