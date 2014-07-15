@@ -7,6 +7,19 @@ class ManipleCore_Bootstrap extends Maniple_Application_ModuleBootstrap
         $moduleBootstraper->bootstrapModule('maniple-vendor-assets');
 
         $bootstrap = $moduleBootstraper->getBootstrap();
+
+        if ($bootstrap->hasPluginResource('translate') || method_exists($bootstrap, '_initTranslate')) {
+            $bootstrap->bootstrap('translate');
+            $translate = $bootstrap->getResource('translate');
+            $dir = dirname(__FILE__) . '/languages/' . $translate->getLocale();
+            if (is_dir($dir)) {
+                $bootstrap->getResource('translate')->addTranslation(array(
+                    'content' => $dir,
+                    'locale'  => $translate->getLocale(),
+                ));
+            }
+        }
+
         $bootstrap->bootstrap('request');
         $bootstrap->bootstrap('view');
 
