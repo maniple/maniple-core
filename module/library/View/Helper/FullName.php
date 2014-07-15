@@ -53,13 +53,13 @@ class ManipleCore_View_Helper_FullName extends Zend_View_Helper_Abstract
 
         if ($options['reverse']) {
             // eastern name order
-            $fullName = $firstName
-                      . (strlen($midName)  ? ' ' . $midName  : '')
-                      . (strlen($lastName) ? ' ' . $lastName : '');
-        } else {
             $fullName = $lastName
                       . (strlen($midName)   ? ' ' . $midName   : '')
                       . (strlen($firstName) ? ' ' . $firstName : '');
+        } else {
+            $fullName = $firstName
+                      . (strlen($midName)  ? ' ' . $midName  : '')
+                      . (strlen($lastName) ? ' ' . $lastName : '');
         }
 
         if ($options['escape']) {
