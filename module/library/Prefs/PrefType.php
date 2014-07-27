@@ -24,7 +24,7 @@ class ManipleCore_Prefs_PrefType
      * @param  mixed $default
      * @return void
      */
-    function __construct($type, $default = null)
+    public function __construct($type, $default = null)
     {
         switch ($type) {
             case TYPE_BOOL:
@@ -140,7 +140,7 @@ class ManipleCore_Prefs_PrefType
      */
     public static function FloatRange($min, $max, $default = null)
     {
-        
+        return new ManipleCore_Prefs_PrefType_Range(self::TYPE_FLOAT, $min, $max, $default);
     }
 
     /**
@@ -149,5 +149,7 @@ class ManipleCore_Prefs_PrefType
      * @return ManipleCore_Prefs_PrefType_Set
      */
     public static function FloatSet(array $values, $default = null)
-    {}
+    {
+        return new ManipleCore_Prefs_PrefType_Set(self::TYPE_FLOAT, $values, $default);
+    }
 }

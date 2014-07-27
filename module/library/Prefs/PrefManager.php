@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Default PrefsManager implementation.
+ * Default PrefManager implementation.
  *
  * @package ManipleCore_Prefs
  */
-class ManipleCore_Prefs_PrefsManager
-    implements ManipleCore_Prefs_PrefsManagerInterface
+class ManipleCore_Prefs_PrefManager
+    implements ManipleCore_Prefs_PrefManagerInterface
 {
     /**
      * @var ManipleCore_Prefs_AdapterInterface
@@ -37,7 +37,7 @@ class ManipleCore_Prefs_PrefsManager
     /**
      * @param  string $name
      * @param  ManipleCore_Prefs_PrefType $type
-     * @return ManipleCore_Prefs_PrefsManager
+     * @return ManipleCore_Prefs_PrefManager
      */
     public function registerPref($name, ManipleCore_Prefs_PrefType $type)
     {
@@ -102,7 +102,7 @@ class ManipleCore_Prefs_PrefsManager
      * @param  int|string $userId
      * @param  string $name
      * @param  mixed $value
-     * @return ManipleCore_Prefs_PrefsManagerInterface
+     * @return ManipleCore_Prefs_PrefManagerInterface
      */
     public function setUserPref($userId, $name, $value)
     {
@@ -121,7 +121,7 @@ class ManipleCore_Prefs_PrefsManager
     /**
      * @param  int|string $userId
      * @param  string $name
-     * @return ManipleCore_Prefs_PrefsManagerInterface
+     * @return ManipleCore_Prefs_PrefManagerInterface
      */
     public function resetUserPref($userId, $name)
     {
@@ -131,7 +131,7 @@ class ManipleCore_Prefs_PrefsManager
 
     /**
      * @param  int|string $userId
-     * @return ManipleCore_Prefs_PrefsManagerInterface
+     * @return ManipleCore_Prefs_PrefManagerInterface
      */
     public function saveUserPrefs($userId)
     {

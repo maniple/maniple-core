@@ -5,13 +5,14 @@
  *
  * @package ManipleCore_Prefs
  */
-interface ManipleCore_Prefs_PrefsManagerInterface
+interface ManipleCore_Prefs_PrefManagerInterface
 {
     /**
      * Register user preference type and default value.
      *
      * @param  string $name
      * @param  ManipleCore_Prefs_PrefType $type
+     * @return ManipleCore_Prefs_PrefManagerInterface
      */
     public function registerPref($name, ManipleCore_Prefs_PrefType $type);
 
@@ -49,7 +50,7 @@ interface ManipleCore_Prefs_PrefsManagerInterface
      * @param  int|string $userId
      * @param  string $name
      * @param  mixed $value
-     * @return ManipleCore_Prefs_PrefsManagerInterface
+     * @return ManipleCore_Prefs_PrefManagerInterface
      */
     public function setUserPref($userId, $name, $value);
 
@@ -58,7 +59,7 @@ interface ManipleCore_Prefs_PrefsManagerInterface
      *
      * @param  int|string $userId
      * @param  array $prefs
-     * @return ManipleCore_Prefs_PrefsManagerInterface
+     * @return ManipleCore_Prefs_PrefManagerInterface
      */
     public function setUserPrefs($userId, array $prefs);
 
@@ -67,7 +68,7 @@ interface ManipleCore_Prefs_PrefsManagerInterface
      *
      * @param  int|string $userId
      * @param  string $name
-     * @return ManipleCore_Prefs_PrefsManagerInterface
+     * @return ManipleCore_Prefs_PrefManagerInterface
      */
     public function resetUserPref($userId, $name);
 
@@ -75,7 +76,7 @@ interface ManipleCore_Prefs_PrefsManagerInterface
      * Persist user preference changes to the adapter.
      *
      * @param  int|string $userId
-     * @return ManipleCore_Prefs_PrefsManagerInterface
+     * @return ManipleCore_Prefs_PrefManagerInterface
      */
     public function saveUserPrefs($userId);
 }
