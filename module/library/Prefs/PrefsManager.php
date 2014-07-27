@@ -19,6 +19,11 @@ class ManipleCore_Prefs_PrefsManager
     protected $_prefs;
 
     /**
+     * @var array
+     */
+    protected $_registeredPrefs;
+
+    /**
      * Constructor.
      *
      * @param  ManipleCore_Prefs_AdapterInterface $adapter
@@ -31,17 +36,27 @@ class ManipleCore_Prefs_PrefsManager
 
     /**
      * @param  string $name
-     * @param  mixed $type
-     * @param  mixed $defaultValue
+     * @param  ManipleCore_Prefs_PrefType $type
+     * @return ManipleCore_Prefs_PrefsManager
      */
-    public function registerPref($name, $type, $defaultValue)
+    public function registerPref($name, ManipleCore_Prefs_PrefType $type)
     {
-        // TODO
+        $name = (string) $name;
+        $this->_registeredPrefs[$name] = $type;
+        return $this;
     }
 
+    /**
+     * @param  string $name
+     * @param  mixed $value
+     * @return mixed
+     */
     public function sanitizePref($name, $value)
     {
-        // TODO
+        $name = (string) $name;
+        if (isset($this->_registeredPrefs[$name])) {
+            return $this->_registeredPrefs[$name]->getValue($value);
+        }
         return $value;
     }
 
