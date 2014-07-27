@@ -9,9 +9,9 @@
 class ManipleCore_Prefs_UserPrefs implements ArrayAccess
 {
     /**
-     * @var ManipleCore_Prefs_UserPrefsManagerInterface
+     * @var ManipleCore_Prefs_PrefManagerInterface
      */
-    protected $_prefsManager;
+    protected $_prefManager;
 
     /**
      * @var int|string
@@ -21,16 +21,16 @@ class ManipleCore_Prefs_UserPrefs implements ArrayAccess
     /**
      * Constructor.
      *
-     * @param  ManipleCore_Prefs_UserPrefsManagerInterface $prefsManager
+     * @param  ManipleCore_Prefs_PrefManagerInterface $prefsManager
      * @param  int|string $userId
      */
-    public function __construct(ManipleCore_Prefs_UserPrefsManagerInterface $prefsManager, $userId)
+    public function __construct(ManipleCore_Prefs_PrefManagerInterface $prefManager, $userId)
     {
         if (!is_int($userId) && !is_string($userId)) {
             throw new InvalidArgumentException('User ID must either be an integer or a string');
         }
 
-        $this->_prefsManager = $prefsManager;
+        $this->_prefManager = $prefManager;
         $this->_userId = $userId;
     }
 
@@ -43,7 +43,7 @@ class ManipleCore_Prefs_UserPrefs implements ArrayAccess
      */
     public function get($name, $defaultValue = null)
     {
-        return $this->_prefsManager->getUserPref($this->_userId, $name, $defaultValue);
+        return $this->_prefManager->getUserPref($this->_userId, $name, $defaultValue);
     }
 
     /**
@@ -55,7 +55,7 @@ class ManipleCore_Prefs_UserPrefs implements ArrayAccess
      */
     public function set($name, $value)
     {
-        $this->_prefsManager->setUserPref($this->_userId, $name, $value);
+        $this->_prefManager->setUserPref($this->_userId, $name, $value);
         return $this;
     }
 
@@ -67,7 +67,7 @@ class ManipleCore_Prefs_UserPrefs implements ArrayAccess
      */
     public function reset($name)
     {
-        $this->_prefsManager->resetUserPref($this->_userId, $name);
+        $this->_prefManager->resetUserPref($this->_userId, $name);
         return $this;
     }
 
@@ -78,7 +78,7 @@ class ManipleCore_Prefs_UserPrefs implements ArrayAccess
      */
     public function save()
     {
-        $this->_prefsManager->saveUserPrefs($this->_userId);
+        $this->_prefManager->saveUserPrefs($this->_userId);
         return $this;
     }
 
