@@ -1,7 +1,6 @@
 <?php
 
-class ManipleCore_Preferences_Adapter_DbTable_UserPreferences
-    extends Zefram_Db_Table
+class ManipleCore_Prefs_Adapter_DbTable_UserPrefs extends Zefram_Db_Table
 {
     protected $_name = 'user_prefs';
 

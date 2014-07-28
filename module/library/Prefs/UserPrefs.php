@@ -114,7 +114,7 @@ class ManipleCore_Prefs_UserPrefs implements ArrayAccess
      */
     public function offsetExists($name)
     {
-        return isset($this->get($name));
+        return $this->get($name) !== null;
     }
 
     /**
@@ -159,7 +159,7 @@ class ManipleCore_Prefs_UserPrefs implements ArrayAccess
      */
     public function __isset($name)
     {
-        return isset($this->get($name));
+        return $this->get($name) !== null;
     }
 
     /**
