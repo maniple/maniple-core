@@ -53,9 +53,13 @@ class ManipleCore_Prefs_PrefManager
      */
     public function sanitizePref($name, $value)
     {
-        $name = (string) $name;
-        if (isset($this->_registeredPrefs[$name])) {
-            return $this->_registeredPrefs[$name]->getValue($value);
+        // only non-NULL values are sanitized, as NULL is a perfectly
+        // valid value which means that given preference is not set
+        if ($value !== null) {
+            $name = (string) $name;
+            if (isset($this->_registeredPrefs[$name])) {
+                return $this->_registeredPrefs[$name]->getValue($value);
+            }
         }
         return $value;
     }
@@ -77,18 +81,15 @@ class ManipleCore_Prefs_PrefManager
      */
     public function getUserPref($userId, $name, $defaultValue = null)
     {
+        $name = (string) $name;
+
         if (isset($this->_prefs[$userId]) &&
             array_key_exists($name, $this->_prefs[$userId])
         ) {
             $value = $this->_prefs[$userId][$name];
         } else {
             $value = $this->_adapter->loadUserPref($userId, $name);
-
-            if ($value !== null) {
-                $value = $this->sanitizePref($name, $value);
-            }
-
-            $this->_prefs[$userId][$name] = $value;
+            $this->_prefs[$userId][$name] = $this->sanitizePref($name, $value);
         }
 
         if ($value === null) {
@@ -106,6 +107,7 @@ class ManipleCore_Prefs_PrefManager
      */
     public function setUserPref($userId, $name, $value)
     {
+        $name = (string) $name;
         $this->_prefs[$userId][$name] = $value;
         return $this;
     }
@@ -125,6 +127,7 @@ class ManipleCore_Prefs_PrefManager
      */
     public function resetUserPref($userId, $name)
     {
+        $name = (string) $name;
         $this->_prefs[$userId][$name] = null;
         return $this;
     }
@@ -137,6 +140,23 @@ class ManipleCore_Prefs_PrefManager
     {
         if (isset($this->_prefs[$userId])) {
             $this->_adapter->saveUserPrefs($userId, $this->_prefs[$userId]);
+        }
+        return $this;
+    }
+
+    /**
+     * Loads user preferences from persistence adapter.
+     *
+     * @param  int|string $userId
+     * @param  string $prefix OPTIONAL
+     * @return ManipleCore_Prefs_PrefManagerInterface
+     */
+    public function loadUserPrefs($userId, $prefix = null)
+    {
+        $prefs = $this->_adapter->loadUserPrefs($userId, $prefix);
+        foreach ($prefs as $name => $value) {
+            $name = (string) $name;
+            $this->_prefs[$userId][$name] = $this->sanitizePref($name, $value);
         }
         return $this;
     }

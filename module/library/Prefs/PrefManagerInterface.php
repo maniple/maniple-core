@@ -79,4 +79,13 @@ interface ManipleCore_Prefs_PrefManagerInterface
      * @return ManipleCore_Prefs_PrefManagerInterface
      */
     public function saveUserPrefs($userId);
+
+    /**
+     * Loads user preferences from persistence adapter.
+     *
+     * @param  int|string $userId
+     * @param  string $prefix OPTIONAL
+     * @return ManipleCore_Prefs_PrefManagerInterface
+     */
+    public function loadUserPrefs($userId, $prefix = null);
 }

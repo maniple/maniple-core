@@ -40,6 +40,30 @@ class ManipleCore_Prefs_Adapter_DbTable
     }
 
     /**
+     * Load user preferences matching given prefix or, if none given,
+     * all user preferences.
+     *
+     * @param  int|string $userId
+     * @param  string $prefix OPTIONAL
+     * @return array
+     */
+    public function loadUserPrefs($userId, $prefix = null)
+    {
+        $where = array('user_id = ?' => $userId);
+
+        if ($prefix !== null) {
+            $prefix = str_replace(array('%', '_', '^', '[', ']'), '', $prefix);
+            $where['pref_name LIKE ?'] = $prefix . '%';
+        }
+
+        $prefs = array();
+        foreach ($this->_table->fetchAll($where) as $row) {
+            $prefs[$row->pref_name] = $row->pref_value;
+        }
+        return $prefs;
+    }
+
+    /**
      * Save single user preference.
      *
      * @param  int|string $userId
