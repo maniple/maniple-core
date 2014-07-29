@@ -66,6 +66,8 @@ class ManipleCore_Prefs_PrefType
     }
 
     /**
+     * Can value can safely be coerced to required type.
+     *
      * @param  mixed $value
      * @return bool
      */
