@@ -39,6 +39,9 @@ class ManipleCore_Prefs_PrefType
         }
 
         if ($default !== null) {
+            if (!$this->isValid($this->_default)) {
+                throw new InvalidArgumentException('Default value is invalid');
+            }
             settype($default, $this->_type);
             $this->_default = $default;
         }
@@ -46,12 +49,44 @@ class ManipleCore_Prefs_PrefType
 
     /**
      * @param  mixed $value
+     * @param  bool &$invalid OPTIONAL
      * @return mixed
      */
-    public function getValue($value)
+    public function getValue($value, &$invalid = null)
     {
-        settype($value, $this->_type);
-        return $value;
+        $invalid = true;
+
+        if ($this->isValid($value)) {
+            settype($value, $this->_type);
+            $invalid = false;
+            return $value;
+        }
+
+        return $this->_default;
+    }
+
+    /**
+     * @param  mixed $value
+     * @return bool
+     */
+    public function isValid($value)
+    {
+        if (!is_scalar($value)) {
+            return false;
+        }
+        switch ($this->_type) {
+            case self::TYPE_INT:
+            case self::TYPE_FLOAT:
+                if (is_string($value) && !is_numeric($value)) {
+                    return false;
+                }
+                // falls through if value can safely be coerced to
+                // a numeric type
+
+            default:
+                break;
+        }
+        return true;
     }
 
     /**

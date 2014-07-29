@@ -1,6 +1,6 @@
 <?php
 
-class ManipleCore_Prefs_PrefType_Set
+class ManipleCore_Prefs_PrefType_Set extends ManipleCore_Prefs_PrefType
 {
     protected $_values;
 
@@ -14,8 +14,6 @@ class ManipleCore_Prefs_PrefType_Set
      */
     public function __construct($type, array $values, $default = null)
     {
-        parent::__construct($type, $default);
-
         foreach ($values as $key => $value) {
             settype($value, $this->_type);
             $values[$key] = $value;
@@ -27,27 +25,20 @@ class ManipleCore_Prefs_PrefType_Set
             throw new InvalidArgumentException('Empty values array provided');
         }
 
-        if ($this->_default !== null &&
-            !in_array($this->_default, $values, true)
-        ) {
-            throw new RangeException('Default value was not found in values array');
-        }
-
         $this->_values = $values;
+
+        parent::__construct($type, $default);
     }
 
     /**
+     * Check if given value belongs to the set.
+     *
      * @param  mixed $value
-     * @return mixed
+     * @return bool
      */
-    public function getValue($value)
+    public function isValid($value)
     {
-        settype($value, $this->_type);
-
-        if (!in_array($value, $this->_values, true)) {
-            return $this->_default;
-        }
-
-        return $value;
+        return parent::isValid($value)
+            && in_array($value, $this->_values, true);
     }
 }

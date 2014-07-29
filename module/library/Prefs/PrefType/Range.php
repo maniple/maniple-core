@@ -1,6 +1,6 @@
 <?php
 
-class ManipleCore_Prefs_PrefType_Range
+class ManipleCore_Prefs_PrefType_Range extends ManipleCore_Prefs_PrefType
 {
     protected $_min;
 
@@ -17,8 +17,6 @@ class ManipleCore_Prefs_PrefType_Range
      */
     public function __construct($type, $min, $max, $default = null)
     {
-        parent::__construct($type, $default);
-
         settype($min, $this->_type);
         settype($max, $this->_type);
 
@@ -30,25 +28,18 @@ class ManipleCore_Prefs_PrefType_Range
             $this->_max = $max;
         }
 
-        if ($this->_default !== null &&
-            ($this->_default < $this->_min || $this->_max < $this->_default)
-        ) {
-            throw new RangeException('Default value is outside allowed range');
-        }
+        parent::__construct($type, $default);
     }
 
     /**
+     * Check if given value is within required range.
+     *
      * @param  mixed $value
-     * @return mixed
+     * @return bool
      */
-    public function getValue($value)
+    public function isValid($value)
     {
-        settype($value, $this->_type);
-
-        if ($value < $this->_min || $this->_max < $value) {
-            return $this->_default;
-        }
-
-        return $value;
+        return parent::isValid($value)
+            && $this->_min <= $value && $value <= $this->_max;
     }
 }

@@ -35,30 +35,37 @@ class ManipleCore_Prefs_PrefManager
     }
 
     /**
+     * Register user preference type and default value.
+     *
      * @param  string $name
      * @param  ManipleCore_Prefs_PrefType $type
      * @return ManipleCore_Prefs_PrefManager
      */
     public function registerPref($name, ManipleCore_Prefs_PrefType $type)
     {
-        $name = (string) $name;
-        $this->_registeredPrefs[$name] = $type;
+        $this->_registeredPrefs[(string) $name] = $type;
         return $this;
     }
 
     /**
+     * Sanitize user preference based on registered types and default
+     * values.
+     *
      * @param  string $name
      * @param  mixed $value
+     * @param  bool &$invalid OPTIONAL
      * @return mixed
      */
-    public function sanitizePref($name, $value)
+    public function sanitizePref($name, $value, &$invalid = null)
     {
+        $invalid = false;
+
         // only non-NULL values are sanitized, as NULL is a perfectly
         // valid value which means that given preference is not set
         if ($value !== null) {
             $name = (string) $name;
             if (isset($this->_registeredPrefs[$name])) {
-                return $this->_registeredPrefs[$name]->getValue($value);
+                return $this->_registeredPrefs[$name]->getValue($value, $invalid);
             }
         }
         return $value;
@@ -66,11 +73,12 @@ class ManipleCore_Prefs_PrefManager
 
     /**
      * @param  int|string $userId
+     * @param  bool|string $load
      * @return ManipleCore_Prefs_UserPrefs
      */
-    public function getUserPrefs($userId)
+    public function getUserPrefs($userId, $load = true)
     {
-        return new ManipleCore_Prefs_UserPrefs($this, $userId);
+        return new ManipleCore_Prefs_UserPrefs($this, $userId, $load);
     }
 
     /**
@@ -103,15 +111,25 @@ class ManipleCore_Prefs_PrefManager
      * @param  int|string $userId
      * @param  string $name
      * @param  mixed $value
-     * @return ManipleCore_Prefs_PrefManagerInterface
+     * @return ManipleCore_Prefs_PrefManager
+     * @throws InvalidArgumentException
      */
     public function setUserPref($userId, $name, $value)
     {
         $name = (string) $name;
+        $value = $this->sanitizePref($name, $value, $invalid);
+        if ($invalid) {
+            throw new InvalidArgumentException("Value of preference '$name' is invalid");
+        }
         $this->_prefs[$userId][$name] = $value;
         return $this;
     }
 
+    /**
+     * @param  int|string $userId
+     * @param  array $prefs
+     * @return ManipleCore_Prefs_PrefManager
+     */
     public function setUserPrefs($userId, array $prefs)
     {
         foreach ($prefs as $name => $value) {
@@ -123,18 +141,17 @@ class ManipleCore_Prefs_PrefManager
     /**
      * @param  int|string $userId
      * @param  string $name
-     * @return ManipleCore_Prefs_PrefManagerInterface
+     * @return ManipleCore_Prefs_PrefManager
      */
     public function resetUserPref($userId, $name)
     {
-        $name = (string) $name;
-        $this->_prefs[$userId][$name] = null;
+        $this->_prefs[$userId][(string) $name] = null;
         return $this;
     }
 
     /**
      * @param  int|string $userId
-     * @return ManipleCore_Prefs_PrefManagerInterface
+     * @return ManipleCore_Prefs_PrefManager
      */
     public function saveUserPrefs($userId)
     {
@@ -149,15 +166,17 @@ class ManipleCore_Prefs_PrefManager
      *
      * @param  int|string $userId
      * @param  string $prefix OPTIONAL
-     * @return ManipleCore_Prefs_PrefManagerInterface
+     * @return string[]
      */
     public function loadUserPrefs($userId, $prefix = null)
     {
+        $names = array();
         $prefs = $this->_adapter->loadUserPrefs($userId, $prefix);
         foreach ($prefs as $name => $value) {
             $name = (string) $name;
             $this->_prefs[$userId][$name] = $this->sanitizePref($name, $value);
+            $names[] = $name;
         }
-        return $this;
+        return $names;
     }
 }

@@ -12,7 +12,7 @@ interface ManipleCore_Prefs_PrefManagerInterface
      *
      * @param  string $name
      * @param  ManipleCore_Prefs_PrefType $type
-     * @return ManipleCore_Prefs_PrefManagerInterface
+     * @return mixed
      */
     public function registerPref($name, ManipleCore_Prefs_PrefType $type);
 
@@ -22,9 +22,10 @@ interface ManipleCore_Prefs_PrefManagerInterface
      *
      * @param  string $name
      * @param  mixed $value
+     * @param  bool &$invalid OPTIONAL
      * @return mixed
      */
-    public function sanitizePref($name, $value);
+    public function sanitizePref($name, $value, &$invalid = null);
 
     /**
      * Get user preferences.
@@ -50,7 +51,7 @@ interface ManipleCore_Prefs_PrefManagerInterface
      * @param  int|string $userId
      * @param  string $name
      * @param  mixed $value
-     * @return ManipleCore_Prefs_PrefManagerInterface
+     * @return mixed
      */
     public function setUserPref($userId, $name, $value);
 
@@ -59,7 +60,7 @@ interface ManipleCore_Prefs_PrefManagerInterface
      *
      * @param  int|string $userId
      * @param  array $prefs
-     * @return ManipleCore_Prefs_PrefManagerInterface
+     * @return mixed
      */
     public function setUserPrefs($userId, array $prefs);
 
@@ -68,7 +69,7 @@ interface ManipleCore_Prefs_PrefManagerInterface
      *
      * @param  int|string $userId
      * @param  string $name
-     * @return ManipleCore_Prefs_PrefManagerInterface
+     * @return mixed
      */
     public function resetUserPref($userId, $name);
 
@@ -76,7 +77,7 @@ interface ManipleCore_Prefs_PrefManagerInterface
      * Persist user preference changes to the adapter.
      *
      * @param  int|string $userId
-     * @return ManipleCore_Prefs_PrefManagerInterface
+     * @return mixed
      */
     public function saveUserPrefs($userId);
 
@@ -85,7 +86,7 @@ interface ManipleCore_Prefs_PrefManagerInterface
      *
      * @param  int|string $userId
      * @param  string $prefix OPTIONAL
-     * @return ManipleCore_Prefs_PrefManagerInterface
+     * @return string[]
      */
     public function loadUserPrefs($userId, $prefix = null);
 }

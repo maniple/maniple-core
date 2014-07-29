@@ -14,6 +14,11 @@ class ManipleCore_Prefs_UserPrefs implements ArrayAccess
     protected $_prefManager;
 
     /**
+     * @var array
+     */
+    protected $_prefNames;
+
+    /**
      * @var int|string
      */
     protected $_userId;
@@ -23,8 +28,9 @@ class ManipleCore_Prefs_UserPrefs implements ArrayAccess
      *
      * @param  ManipleCore_Prefs_PrefManagerInterface $prefsManager
      * @param  int|string $userId
+     * @param  bool|string $load
      */
-    public function __construct(ManipleCore_Prefs_PrefManagerInterface $prefManager, $userId)
+    public function __construct(ManipleCore_Prefs_PrefManagerInterface $prefManager, $userId, $load = true)
     {
         if (!is_int($userId) && !is_string($userId)) {
             throw new InvalidArgumentException('User ID must either be an integer or a string');
@@ -32,6 +38,12 @@ class ManipleCore_Prefs_UserPrefs implements ArrayAccess
 
         $this->_prefManager = $prefManager;
         $this->_userId = $userId;
+
+        if ($load) {
+            $prefix = is_string($load) ? $load : null;
+            $names = $this->_prefManager->loadUserPrefs($userId, $prefix);
+            $this->_prefNames = array_flip($names);
+        }
     }
 
     /**
@@ -43,7 +55,9 @@ class ManipleCore_Prefs_UserPrefs implements ArrayAccess
      */
     public function get($name, $defaultValue = null)
     {
-        return $this->_prefManager->getUserPref($this->_userId, $name, $defaultValue);
+        $value = $this->_prefManager->getUserPref($this->_userId, $name, $defaultValue);
+        $this->_prefNames[(string) $name] = true;
+        return $value;
     }
 
     /**
@@ -56,6 +70,7 @@ class ManipleCore_Prefs_UserPrefs implements ArrayAccess
     public function set($name, $value)
     {
         $this->_prefManager->setUserPref($this->_userId, $name, $value);
+        $this->_prefNames[(string) $name] = true;
         return $this;
     }
 
@@ -80,6 +95,16 @@ class ManipleCore_Prefs_UserPrefs implements ArrayAccess
     {
         $this->_prefManager->saveUserPrefs($this->_userId);
         return $this;
+    }
+
+    /**
+     * Return names of loaded preferences.
+     *
+     * @return string[]
+     */
+    public function getNames()
+    {
+        return array_keys((array) $this->_prefNames);
     }
 
     /**
