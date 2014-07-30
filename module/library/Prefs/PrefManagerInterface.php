@@ -8,26 +8,6 @@
 interface ManipleCore_Prefs_PrefManagerInterface
 {
     /**
-     * Register user preference type and default value.
-     *
-     * @param  string $name
-     * @param  ManipleCore_Prefs_PrefType $type
-     * @return mixed
-     */
-    public function registerPref($name, ManipleCore_Prefs_PrefType $type);
-
-    /**
-     * Sanitize user preference based on registered types and default
-     * values.
-     *
-     * @param  string $name
-     * @param  mixed $value
-     * @param  bool &$invalid OPTIONAL
-     * @return mixed
-     */
-    public function sanitizePref($name, $value, &$invalid = null);
-
-    /**
      * Set default preferences' values.
      *
      * @param  array $defaults
