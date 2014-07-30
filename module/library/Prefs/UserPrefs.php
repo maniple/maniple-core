@@ -6,7 +6,7 @@
  *
  * @package ManipleCore_Prefs
  */
-class ManipleCore_Prefs_UserPrefs implements ArrayAccess
+class ManipleCore_Prefs_UserPrefs
 {
     /**
      * @var ManipleCore_Prefs_PrefManagerInterface
@@ -61,6 +61,62 @@ class ManipleCore_Prefs_UserPrefs implements ArrayAccess
     }
 
     /**
+     * @param  string $name
+     * @param  bool $defaultValue OPTIONAL
+     * @return bool|null
+     */
+    public function getBool($name, $defaultValue = null)
+    {
+        $value = $this->get($name, $defaultValue);
+        if ($value !== null) {
+            $value = (bool) $value;
+        }
+        return $value;
+    }
+
+    /**
+     * @param  string $name
+     * @param  int $defaultValue OPTIONAL
+     * @return int|null
+     */
+    public function getInt($name, $defaultValue = null)
+    {
+        $value = $this->get($name, $defaultValue);
+        if ($value !== null) {
+            $value = (int) $value;
+        }
+        return $value;
+    }
+
+    /**
+     * @param  string $name
+     * @param  float $defaultValue OPTIONAL
+     * @return float|null
+     */
+    public function getFloat($name, $defaultValue = null)
+    {
+        $value = $this->get($name, $defaultValue);
+        if ($value !== null) {
+            $value = (float) $value;
+        }
+        return $value;
+    }
+
+    /**
+     * @param  string $name
+     * @param  string $defaultValue OPTIONAL
+     * @return string|null
+     */
+    public function getString($name, $defaultValue = null)
+    {
+        $value = $this->get($name, $defaultValue);
+        if ($value !== null) {
+            $value = (string) $value;
+        }
+        return $value;
+    }
+
+    /**
      * Set user preference.
      *
      * @param  string $name
@@ -83,6 +139,7 @@ class ManipleCore_Prefs_UserPrefs implements ArrayAccess
     public function reset($name)
     {
         $this->_prefManager->resetUserPref($this->_userId, $name);
+        unset($this->_prefNames[(string) $name]);
         return $this;
     }
 
@@ -105,96 +162,5 @@ class ManipleCore_Prefs_UserPrefs implements ArrayAccess
     public function getNames()
     {
         return array_keys((array) $this->_prefNames);
-    }
-
-    /**
-     * Required by ArrayAccess interface, proxy to {@link get()}.
-     *
-     * @param  string $name
-     * @return mixed
-     */
-    public function offsetGet($name)
-    {
-        return $this->get($name);
-    }
-
-    /**
-     * Required by ArrayAccess interface, proxy to {@link set()}.
-     *
-     * @param  string $name
-     * @param  mixed $value
-     * @return void
-     */
-    public function offsetSet($name, $value)
-    {
-        $this->set($name);
-    }
-
-    /**
-     * Get preference and check if it is not null. Required by ArrayAccess
-     * interface.
-     *
-     * @param  string $name
-     * @return bool
-     */
-    public function offsetExists($name)
-    {
-        return $this->get($name) !== null;
-    }
-
-    /**
-     * Required by ArrayAccess interface, proxy to {@link reset()}.
-     *
-     * @param  string $name
-     * @return void
-     */
-    public function offsetUnset($name)
-    {
-        $this->reset($name);
-    }
-
-    /**
-     * Proxy to {@link get()}.
-     *
-     * @param  string $name
-     * @return mixed
-     */
-    public function __get($name)
-    {
-        return $this->get($name);
-    }
-
-    /**
-     * Proxy to {@link set()}.
-     *
-     * @param  string $name
-     * @param  mixed $value
-     * @return void
-     */
-    public function __set($name, $value)
-    {
-        $this->set($name, $value);
-    }
-
-    /**
-     * Get preference and check if it is not null.
-     *
-     * @param  string $name
-     * @return bool
-     */
-    public function __isset($name)
-    {
-        return $this->get($name) !== null;
-    }
-
-    /**
-     * Proxy to {@link reset()}.
-     *
-     * @param  string $name
-     * @return void
-     */
-    public function __unset($name)
-    {
-        $this->reset($name);
     }
 }

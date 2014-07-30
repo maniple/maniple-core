@@ -28,6 +28,32 @@ interface ManipleCore_Prefs_PrefManagerInterface
     public function sanitizePref($name, $value, &$invalid = null);
 
     /**
+     * Set default preferences' values.
+     *
+     * @param  array $defaults
+     * @return mixed
+     */
+    public function setDefaults(array $defaults);
+
+    /**
+     * Set default preference value.
+     *
+     * @param  string $name
+     * @param  mixed $value
+     * @return mixed
+     */
+    public function setDefault($name, $value);
+
+    /**
+     * Get default preference value.
+     *
+     * @param  string $name
+     * @param  mixed $defaultValue OPTIONAL
+     * @return mixed
+     */
+    public function getDefault($name, $defaultValue = null);
+
+    /**
      * Get user preferences.
      *
      * @param  int|string $userId

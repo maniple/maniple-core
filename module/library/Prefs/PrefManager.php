@@ -16,6 +16,11 @@ class ManipleCore_Prefs_PrefManager
     /**
      * @var array
      */
+    protected $_defaults;
+
+    /**
+     * @var array
+     */
     protected $_prefs;
 
     /**
@@ -32,6 +37,51 @@ class ManipleCore_Prefs_PrefManager
     public function __construct(ManipleCore_Prefs_AdapterInterface $adapter)
     {
         $this->_adapter = $adapter;
+    }
+
+    /**
+     * Set default preferences' values.
+     *
+     * @param  array $defaults
+     * @return ManipleCore_Prefs_PrefManager
+     */
+    public function setDefaults(array $defaults)
+    {
+        foreach ($defaults as $name => $value) {
+            $this->setDefault($name, $value);
+        }
+        return $this;
+    }
+
+    /**
+     * Set default preference value.
+     *
+     * @param  string $name
+     * @param  mixed $value
+     * @return ManipleCore_Prefs_PrefManager
+     */
+    public function setDefault($name, $value)
+    {
+        $name = (string) $name;
+        if ($value === null) {
+            unset($this->_defaults[$name]);
+        } else {
+            $this->_defaults[$name] = $value;
+        }
+        return $this;
+    }
+
+    /**
+     * Get default preference value.
+     *
+     * @param  string $name
+     * @param  mixed $defaultValue OPTIONAL
+     * @return mixed
+     */
+    public function getDefault($name, $defaultValue = null)
+    {
+        $name = (string) $name;
+        return isset($this->_defaults[$name]) ? $this->_defaults[$name] : $defaultValue;
     }
 
     /**
@@ -101,7 +151,7 @@ class ManipleCore_Prefs_PrefManager
         }
 
         if ($value === null) {
-            $value = $defaultValue;
+            $value = $this->getDefault($name, $defaultValue);
         }
 
         return $value;

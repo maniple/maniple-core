@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * DbTable based preference persistence adapter
+ *
+ * @package ManipleCore_Prefs
+ * @uses    Zefram_Db_Table
+ * @uses    Zend_Serializer
+ * @author  xemlock
+ * @version 2014-07-30
+ */
 class ManipleCore_Prefs_Adapter_DbTable
     implements ManipleCore_Prefs_AdapterInterface
 {
@@ -9,14 +18,27 @@ class ManipleCore_Prefs_Adapter_DbTable
     protected $_table;
 
     /**
+     * @var Zend_Serializer_Adapter_Interface
+     */
+    protected $_serializer;
+
+    /**
      * Constructor.
      *
      * @param  Zefram_Db_Table_FactoryInterface $factory
+     * @param  Zend_Serializer_Adapter_Interface|string $serializer
      * @return void
      */
-    public function __construct(Zefram_Db_Table_FactoryInterface $factory)
+    public function __construct(Zefram_Db_Table_FactoryInterface $factory, $serializer = null)
     {
         $this->_table = $factory->getTable('ManipleCore_Prefs_Adapter_DbTable_UserPrefs');
+
+        if ($serializer !== null) {
+            if (!$serializer instanceof Zend_Serializer_Adapter_Interface) {
+                $serializer = Zend_Serializer::factory($serializer);
+            }
+            $this->_serializer = $serializer;
+        }
     }
 
     /**
@@ -34,7 +56,7 @@ class ManipleCore_Prefs_Adapter_DbTable
             'pref_name = ?' => $name,
         ));
         if ($row) {
-            return $row->pref_value;
+            return $this->_unserialize($row->pref_value);
         }
         return null;
     }
@@ -58,7 +80,7 @@ class ManipleCore_Prefs_Adapter_DbTable
 
         $prefs = array();
         foreach ($this->_table->fetchAll($where) as $row) {
-            $prefs[$row->pref_name] = $row->pref_value;
+            $prefs[$row->pref_name] = $this->_unserialize($row->pref_value);
         }
         return $prefs;
     }
@@ -81,7 +103,7 @@ class ManipleCore_Prefs_Adapter_DbTable
         $this->_table->insert(array(
             'user_id'    => $userId,
             'pref_name'  => $name,
-            'pref_value' => $value,
+            'pref_value' => $this->_serialize($value),
         ));
         return $this;
     }
@@ -104,9 +126,43 @@ class ManipleCore_Prefs_Adapter_DbTable
             $this->_table->insert(array(
                 'user_id'    => $userId,
                 'pref_name'  => $name,
-                'pref_value' => $value,
+                'pref_value' => $this->_serialize($value),
             ));
         }
         return $this;
+    }
+
+    /**
+     * @param  mixed $value
+     * @return mixed
+     */
+    protected function _unserialize($value)
+    {
+        if ($this->_serializer) {
+            try {
+                $value = $this->_serializer->unserialize($value);
+            } catch (Exception $e) {
+                $value = null;
+            }
+        }
+        return $value;
+    }
+
+    /**
+     * @param  mixed $value
+     * @return string
+     */
+    protected function _serialize($value)
+    {
+        if ($this->_serializer) {
+            $value = $this->_serializer->serialize($value);
+        } elseif (is_bool($value)) {
+            $value = (int) $value;
+        } elseif (is_float($value)) {
+            // do not cast to float, as during conversion from float to string
+            // E notation is used for big numbers
+            $value = sprintf('%F', $value);
+        }
+        return (string) $value;
     }
 }
