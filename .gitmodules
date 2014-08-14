@@ -1,0 +1,3 @@
+[submodule "assets/js/maniple"]
+	path = assets/js/maniple
+	url = https://github.com/maniple/maniple-js-dist
