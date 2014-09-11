@@ -104,7 +104,7 @@ class ManipleCore_Prefs_PrefManager
         ) {
             $value = $this->_prefs[$userId][$name];
         } else {
-            $this->_prefs[$userId][$name] = $this->_adapter->loadUserPref($userId, $name);
+            $value = $this->_prefs[$userId][$name] = $this->_adapter->loadUserPref($userId, $name);
         }
 
         if ($value === null) {
