@@ -120,6 +120,7 @@ class ManipleCore_Helper_ImageHelper
             $info = Zefram_Image::getInfo($filename);
             switch ($info[Zefram_Image::INFO_EXTENSION]) {
                 case 'jpg':
+                case 'jpeg':
                     $ext = 'jpg';
                     break;
 
@@ -142,10 +143,18 @@ class ManipleCore_Helper_ImageHelper
             $image = new Zefram_Image($filename);
 
             if ($scale) {
-                $image->scale($width, $height, $crop)->save($thumb);
+                $image = $image->scale($width, $height, $crop);
             } else {
-                $image->resize($width, $height)->save($thumb);
+                $image = $image->resize($width, $height);
             }
+
+            // save JPEG images as progressive JPEGs, see:
+            // http://php.net/manual/en/function.imageinterlace.php
+            if ($ext === 'jpg') {
+                imageinterlace($image->getHandle(), 1);
+            }
+
+            $image->save($thumb);
 
             return $thumb;
         }
