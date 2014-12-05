@@ -87,36 +87,59 @@ class ManipleCore_Helper_ImageHelper
      * @return string
      * @throws Zefram_Image_Exception
      * @throws Maniple_Controller_NotFoundException
+     * @version 2014-12-03
      */
-    public function getImagePath($filename, array $options = null) // {{{
+    public function getImagePath($filename, $options = null) // {{{
     {
         if (strlen($filename) && is_file($filename) && is_readable($filename)) {
             $filename = realpath($filename);
 
-            $width = $height = 0;
+            $max = $width = $height = 0;
 
-            if (isset($options['width'])) {
-                $width = max(0, (int) $options['width']);
-            }
-            if (isset($options['height'])) {
-                $height = max(0, (int) $options['height']);
+            if (!is_array($options)) {
+                // parse options string, WxH or max:M
+                // 100x200
+                // 100x
+                // x200
+                // max:100
+                if (strncasecmp($options, 'max:', 4) === 0) {
+                    $max = max(0, (int) substr($options, 4));
+
+                } else {
+                    $tmp = explode('x', $options);
+                    $width = max(0, (int) array_shift($tmp));
+                    $height = max(0, (int) array_shift($tmp));
+                }
+
+            } else {
+                if (isset($options['max'])) {
+                    $max = max(0, (int) $options['max']);
+                }
+                if (isset($options['width'])) {
+                    $width = max(0, (int) $options['width']);
+                }
+                if (isset($options['height'])) {
+                    $height = max(0, (int) $options['height']);
+                }
             }
 
-            // if width and height were not given return original image
-            if ($width + $height == 0) {
+            // if width, height and max were not given return original image
+            if ($width + $height + $max === 0) {
                 return $filename;
             }
 
-            // if invalid dimensions return original image
-            if ($this->_allowedDimensions && !in_array("{$width}x{$height}", $this->_allowedDimensions, true)) {
+            // if invalid dimensions return original image,
+            // check only if at least one of dimensions differs from 0
+            // the reason for that is to prevent cpu consumption by unauthorized
+            // resizing of images
+
+            $dimKey = $max ? "max:{$max}" : "{$width}x{$height}";
+
+            if ($this->_allowedDimensions && !in_array($dimKey, $this->_allowedDimensions, true)) {
                 return $filename;
             }
 
             // check if image exists in cache and it hasn't not expired
-
-            $scale = isset($options['scale']) && $options['scale'];
-            $crop = $scale && isset($options['crop']) && $options['crop'];
-
             $info = Zefram_Image::getInfo($filename);
             switch ($info[Zefram_Image::INFO_EXTENSION]) {
                 case 'jpg':
@@ -129,24 +152,31 @@ class ManipleCore_Helper_ImageHelper
                     break;
             }
 
-            $width = min($width, $info[Zefram_Image::INFO_WIDTH]);
-            $height = min($height, $info[Zefram_Image::INFO_HEIGHT]);
+            // images are cropped by default, there is no value in providing
+            // distorted images to user
+            if ($max) {
+                if ($info[Zefram_Image::INFO_WIDTH] > $info[Zefram_Image::INFO_HEIGHT]) {
+                    $width = $max;
+                    $height = 0;
+                } else {
+                    $width = 0;
+                    $height = $max;
+                }
+            } else {
+                $width = min($width, $info[Zefram_Image::INFO_WIDTH]);
+                $height = min($height, $info[Zefram_Image::INFO_HEIGHT]);
+            }
 
-            $thumb = $this->getStorageDir() . sprintf("%s.%dx%d.%d.%s",
-                        md5($filename), $width, $height, $scale + $crop, $ext);
+            $path = $this->getStorageDir()
+                   . sprintf("_%s.%dx%d.%s", md5($filename), $width, $height, $ext);
 
-            if (is_file($thumb) && filemtime($filename) < filemtime($thumb)) {
-                return $thumb;
+            if (is_file($path) && filemtime($filename) < filemtime($path)) {
+                return $path;
             }
 
             // image was not found or expired
             $image = new Zefram_Image($filename);
-
-            if ($scale) {
-                $image = $image->scale($width, $height, $crop);
-            } else {
-                $image = $image->resize($width, $height);
-            }
+            $image = $image->scale($width, $height, true);
 
             // save JPEG images as progressive JPEGs, see:
             // http://php.net/manual/en/function.imageinterlace.php
@@ -154,9 +184,9 @@ class ManipleCore_Helper_ImageHelper
                 imageinterlace($image->getHandle(), 1);
             }
 
-            $image->save($thumb);
+            $image->save($path);
 
-            return $thumb;
+            return $path;
         }
 
         throw new Maniple_Controller_NotFoundException('Image file not found');
