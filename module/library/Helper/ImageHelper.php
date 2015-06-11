@@ -162,9 +162,6 @@ class ManipleCore_Helper_ImageHelper
                     $width = 0;
                     $height = $max;
                 }
-            } else {
-                $width = min($width, $info[Zefram_Image::INFO_WIDTH]);
-                $height = min($height, $info[Zefram_Image::INFO_HEIGHT]);
             }
 
             $path = $this->getStorageDir()
