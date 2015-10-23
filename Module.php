@@ -24,7 +24,7 @@ class Module
         $view = $sm->get('View');
         $view->headScript()->appendScript(sprintf(
             'require.config(%s)',
-            Zefram_Json::encode(
+            \Zefram_Json::encode(
                 array(
                     'paths' => array(
                         'maniple' => $view->baseUrl('/assets/core/js/maniple'),
