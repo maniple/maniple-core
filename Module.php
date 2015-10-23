@@ -6,9 +6,29 @@ use Zend\Mvc\MvcEvent;
 
 class Module
 {
+    public function getAutoloaderConfig()
+    {
+        return array(
+            'Zend\Loader\StandardAutoloader' => array(
+                'prefixes' => array(
+                    'ManipleCore_' => __DIR__ . '/library',
+                ),
+            ),
+        );
+    }
+
     public function getConfig()
     {
-        return require __DIR__ . '/configs/resources.config.php';
+        return array_merge(
+            require __DIR__ . '/configs/resources.config.php',
+            array(
+                'view' => array(
+                    'helperPath' => array(
+                        'ManipleCore_View_Helper_' => __DIR__ . '/library/View/Helper',
+                    ),
+                ),
+            )
+        );
     }
 
     public function getAssetsBaseDir()
