@@ -6,6 +6,11 @@ use Zend\Mvc\MvcEvent;
 
 class Module
 {
+    public function getModuleDependencies()
+    {
+        return array('ManipleVendorAssets');
+    }
+
     public function getAutoloaderConfig()
     {
         return array(
