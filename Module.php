@@ -27,9 +27,11 @@ class Module
         return array_merge(
             require __DIR__ . '/configs/resources.config.php',
             array(
-                'view' => array(
-                    'helperPath' => array(
-                        'ManipleCore_View_Helper_' => __DIR__ . '/library/View/Helper',
+                'resources' => array(
+                    'view' => array(
+                        'helperPath' => array(
+                            'ManipleCore_View_Helper_' => __DIR__ . '/library/View/Helper',
+                        ),
                     ),
                 ),
             )
@@ -43,10 +45,11 @@ class Module
 
     public function onBootstrap(MvcEvent $e)
     {
-        $sm = $e->getApplication()->getServiceManager();
+        /** @var $bootstrap \Zend_Application_Bootstrap_Bootstrap */
+        $bootstrap = $e->getApplication()->getServiceManager()->get('Bootstrap');
 
         /** @var $view \Zend_View_Abstract */
-        $view = $sm->get('View');
+        $view = $bootstrap->get('View');
         $view->headScript()->appendScript(sprintf(
             'require.config(%s)',
             \Zefram_Json::encode(
