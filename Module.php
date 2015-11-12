@@ -49,7 +49,7 @@ class Module
         $bootstrap = $e->getApplication()->getServiceManager()->get('Bootstrap');
 
         /** @var $view \Zend_View_Abstract */
-        $view = $bootstrap->get('View');
+        $view = $bootstrap->getResource('View');
         $view->headScript()->appendScript(sprintf(
             'require.config(%s)',
             \Zefram_Json::encode(
