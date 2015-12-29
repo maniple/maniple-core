@@ -23,6 +23,7 @@ class ManipleCore_Helper_ImageHelper
     public function setStorageDir($path) // {{{
     {
         $path = rtrim($path, '\\/');
+        $path = str_replace('\\', '/', $path);
         if (!is_dir($path) || !is_writable($path) || !is_readable($path)) {
             throw new Exception(sprintf(
                 'Invalid storage dir provided (%s)', $path
