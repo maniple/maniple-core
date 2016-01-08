@@ -11,5 +11,8 @@
             'tableProvider' => null,
             'userClass'     => 'ManipleCore_Model_User',
         ),
-    )
+    ),
+    'core.navigation_manager' => array(
+        'callback' => 'ManipleCore_Service_NavigationManagerFactory::factory',
+    ),
 );

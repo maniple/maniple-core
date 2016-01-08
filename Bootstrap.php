@@ -39,4 +39,14 @@ class ManipleCore_Bootstrap extends Maniple_Application_Module_Bootstrap
     {
         return require dirname(__FILE__) . '/configs/resources.config.php';
     }
+
+    protected function _initView()
+    {
+        $bootstrap = $this->getApplication();
+        $bootstrap->bootstrap('View');
+
+        /** @var Zend_View $view */
+        $view = $bootstrap->getResource('View');
+        $view->addHelperPath(dirname(__FILE__) . '/library/View/Helper/', 'ManipleCore_View_Helper_');
+    }
 }
