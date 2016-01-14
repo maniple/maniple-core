@@ -33,6 +33,7 @@ class ManipleCore_Validate_FilteredStringLength extends Zend_Validate_StringLeng
         $filter = $this->getFilter();
         if ($filter) {
             $value = $filter->filter($value);
+            $value = preg_replace('/\s+/', ' ', $value); // FIXME this should be in filter
         }
         return parent::isValid($value);
     }
