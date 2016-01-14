@@ -11,6 +11,10 @@ class ManipleCore_Validate_FilteredStringLength extends Zend_Validate_StringLeng
         if (array_key_exists('filter', $options)) {
             $this->setFilter($options['filter']);
         }
+
+        if (isset($options['messages'])) {
+            $this->setMessages($options['messages']);
+        }
     }
 
     public function setFilter($filter = null)
