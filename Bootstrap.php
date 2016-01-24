@@ -40,6 +40,15 @@ class ManipleCore_Bootstrap extends Maniple_Application_Module_Bootstrap
         return require dirname(__FILE__) . '/configs/resources.config.php';
     }
 
+    protected function _initRouter()
+    {
+        /** @var Zend_Controller_Router_Rewrite $router */
+        $router = $this->getApplication()->getResource('FrontController')->getRouter();
+        $router->addConfig(new Zend_Config(
+            require dirname(__FILE__) . '/configs/routes.config.php'
+        ));
+    }
+
     protected function _initView()
     {
         $bootstrap = $this->getApplication();
