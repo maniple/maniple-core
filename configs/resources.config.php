@@ -19,4 +19,8 @@
     'EntityManager' => array(
         'callback' => 'ManipleCore\Doctrine\Service\EntityManagerFactory::factory',
     ),
+
+    'EntityManager.config' => array(
+        'class' => 'ManipleCore\Doctrine\Config',
+    ),
 );

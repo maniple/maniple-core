@@ -6,6 +6,9 @@ abstract class EntityManagerFactory
 {
     public static function factory(\Zefram_Application_ResourceContainer $container)
     {
+        /** @var \ManipleCore\Doctrine\Config $config */
+        $config = $container->getResource('EntityManager.config');
+
         /** @var $db \Zefram_Db */
         $db = $container->getResource('ZeframDb');
 
@@ -15,10 +18,7 @@ abstract class EntityManagerFactory
         $logger = new \Doctrine\DBAL\Logging\DebugStack();
         $conn->getConfiguration()->setSQLLogger($logger);
 
-        $paths = array(
-            // __DIR__ . '/../../config/doctrine'
-            __DIR__ . '/../Model',
-        );
+        $paths = $config->getPaths();
         $isDevMode = true;
         if(0)$config = \Doctrine\ORM\Tools\Setup::createYAMLMetadataConfiguration(
             $paths,
