@@ -4,7 +4,7 @@ namespace ManipleCore\Doctrine\Service;
 
 abstract class EntityManagerFactory
 {
-    public function createService(\Zefram_Application_ResourceContainer $container)
+    public static function factory(\Zefram_Application_ResourceContainer $container)
     {
         /** @var $db \Zefram_Db */
         $db = $container->getResource('ZeframDb');
