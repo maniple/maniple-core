@@ -15,4 +15,8 @@
     'core.navigation_manager' => array(
         'callback' => 'ManipleCore_Service_NavigationManagerFactory::factory',
     ),
+
+    'EntityManager' => array(
+        'callback' => 'ManipleCore\Doctrine\Service\EntityManagerFactory::factory',
+    ),
 );
