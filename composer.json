@@ -10,7 +10,15 @@
     ],
     "require": {
         "xemlock/zefram-composer-installer": "*",
-        "doctrine/orm": "^2.5",
+        "doctrine/orm": "^2.4",
         "symfony/yaml": "^2.7"
+    },
+    "autoload": {
+        "psr-0": {
+            "ManipleCore_": "library/"
+        },
+        "psr-4": {
+            "ManipleCore\\": "library/"
+        }
     }
 }
