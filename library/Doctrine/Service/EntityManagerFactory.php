@@ -24,9 +24,9 @@ abstract class EntityManagerFactory
             $paths,
             $isDevMode
         );
-        $config = \Doctrine\ORM\Tools\Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
-        $config->setProxyDir(APPLICATION_PATH . '/../data/doctrine/Proxies');
-        $config->setAutoGenerateProxyClasses(true);
+        $metadataConfig = \Doctrine\ORM\Tools\Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
+        $metadataConfig->setProxyDir(APPLICATION_PATH . '/../data/doctrine/Proxies');
+        $metadataConfig->setAutoGenerateProxyClasses(true);
 
         // setup table prefix
         $tablePrefix = new \ManipleCore\Doctrine\Extensions\TablePrefix($db->getTablePrefix());
@@ -35,7 +35,11 @@ abstract class EntityManagerFactory
         // setup custom types
         \Doctrine\DBAL\Types\Type::addType('epoch', 'ManipleCore\Doctrine\Types\Epoch');
 
-        $entityManager = \Doctrine\ORM\EntityManager::create($conn, $config, $evm);
+        foreach ($config->getTypes() as $name => $class) {
+            \Doctrine\DBAL\Types\Type::addType($name, $class);
+        }
+
+        $entityManager = \Doctrine\ORM\EntityManager::create($conn, $metadataConfig, $evm);
         return $entityManager;
     }
 }

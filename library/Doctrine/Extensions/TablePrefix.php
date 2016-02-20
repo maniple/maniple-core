@@ -15,6 +15,7 @@ class TablePrefix
 
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
+        /** @var \Doctrine\ORM\Mapping\ClassMetadata $classMetadata */
         $classMetadata = $eventArgs->getClassMetadata();
 
         if (!$classMetadata->isInheritanceTypeSingleTable() || $classMetadata->getName() === $classMetadata->rootEntityName) {
@@ -27,5 +28,39 @@ class TablePrefix
                 $classMetadata->associationMappings[$fieldName]['joinTable']['name'] = $this->prefix . $mappedTableName;
             }
         }
+
+        // add prefix to indexes
+        $table = $classMetadata->table;
+
+        if (isset($table['indexes'])) {
+            $table['indexes'] = $this->prefixArrayKeys($table['indexes']);
+        }
+
+        if (isset($table['uniqueConstraints'])) {
+            $table['uniqueConstraints'] = $this->prefixArrayKeys($table['uniqueConstraints']);
+        }
+
+        // add prefix to sequence
+        if ($classMetadata->sequenceGeneratorDefinition) {
+            $classMetadata->sequenceGeneratorDefinition['sequenceName'] =
+                $this->prefix . $classMetadata->sequenceGeneratorDefinition['sequenceName'];
+        }
+
+        $classMetadata->table = $table;
+    }
+
+    protected function prefixArrayKeys(array $array)
+    {
+        $prefixedArray = array();
+
+        foreach ($array as $key => $value) {
+            $prefixedKey = $this->prefix . $key;
+            if (isset($array[$prefixedKey])) {
+                throw new Exception(sprintf('Prefixed name conflict %s', $prefixedKey));
+            }
+            $prefixedArray[$prefixedKey] = $value;
+        }
+
+        return $prefixedArray;
     }
 }
