@@ -3,6 +3,11 @@
 namespace ManipleCore\Doctrine\Extensions;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Id\AbstractIdGenerator;
+use Doctrine\ORM\Id\BigIntegerIdentityGenerator;
+use Doctrine\ORM\Id\IdentityGenerator;
+use Doctrine\ORM\Id\SequenceGenerator;
+use Doctrine\ORM\Id\TableGenerator;
 
 class TablePrefix
 {
@@ -17,8 +22,6 @@ class TablePrefix
     {
         /** @var \Doctrine\ORM\Mapping\ClassMetadata $classMetadata */
         $classMetadata = $eventArgs->getClassMetadata();
-
-        $origTableName = $classMetadata->getTableName();
 
         if (!$classMetadata->isInheritanceTypeSingleTable() || $classMetadata->getName() === $classMetadata->rootEntityName) {
             $classMetadata->setTableName($this->prefix . $classMetadata->getTableName());
@@ -55,8 +58,10 @@ class TablePrefix
 
         // add prefix to sequence
         if ($classMetadata->sequenceGeneratorDefinition) {
-            $classMetadata->sequenceGeneratorDefinition['sequenceName'] =
-                $this->prefix . $classMetadata->sequenceGeneratorDefinition['sequenceName'];
+            $sequenceName = $this->prefix . $classMetadata->sequenceGeneratorDefinition['sequenceName'];
+            $classMetadata->sequenceGeneratorDefinition['sequenceName'] = $sequenceName;
+
+            $this->_setIdGeneratorSequenceName($classMetadata->idGenerator, $sequenceName);
         }
 
         $classMetadata->table = $table;
@@ -68,7 +73,7 @@ class TablePrefix
 
         foreach ($array as $key => $value) {
             if (is_int($key)) {
-                // auto gerenerate index name when needed
+                // auto generate index name when not provided
                 $prefixedKey = $this->_generateIdentifierName($value['columns'], $typePrefix);
             } else {
                 $prefixedKey = $this->prefix . $key;
@@ -89,5 +94,21 @@ class TablePrefix
         }, $columnNames));
 
         return substr($this->prefix . $prefix . "_" . $hash, 0, $maxSize);
+    }
+
+    protected function _setIdGeneratorSequenceName(AbstractIdGenerator $idGenerator, $sequenceName)
+    {
+        $refClass = new \ReflectionClass($idGenerator);
+        $refProp = null;
+        if ($refClass->hasProperty('sequenceName')) {
+            $refProp = $refClass->getProperty('sequenceName');
+        } elseif ($refClass->hasProperty('_sequenceName')) {
+            $refProp = $refClass->getProperty('_sequenceName');
+        }
+        if ($refProp) {
+            $refProp->setAccessible(true);
+            $refProp->setValue($idGenerator, $sequenceName);
+        }
+        return $idGenerator;
     }
 }
