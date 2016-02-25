@@ -33,7 +33,8 @@ abstract class EntityManagerFactory
         $evm->addEventListener(\Doctrine\ORM\Events::loadClassMetadata, $tablePrefix);
 
         // setup custom types
-        \Doctrine\DBAL\Types\Type::addType('epoch', 'ManipleCore\Doctrine\Types\Epoch');
+        \Doctrine\DBAL\Types\Type::addType('epoch', 'ManipleCore\Doctrine\Types\EpochType');
+        \Doctrine\DBAL\Types\Type::addType('boolint', 'ManipleCore\Doctrine\Types\BoolintType');
 
         foreach ($config->getTypes() as $name => $class) {
             \Doctrine\DBAL\Types\Type::addType($name, $class);

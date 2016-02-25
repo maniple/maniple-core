@@ -5,7 +5,7 @@ namespace ManipleCore\Doctrine\Types;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 
-class Epoch extends Type
+class EpochType extends Type
 {
     const EPOCH = 'epoch';
 
