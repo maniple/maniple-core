@@ -148,7 +148,7 @@ class ManipleCore_Helper_FileHelper
      * Delay between consecutive chunks
      * @var int
      */
-    protected $_sec = 0.1;
+    protected $_sec = 0.0025;
 
     /**
      * Chunk size in bytes
