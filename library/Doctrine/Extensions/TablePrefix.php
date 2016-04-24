@@ -53,7 +53,7 @@ class TablePrefix
         }
 
         if (isset($table['uniqueConstraints'])) {
-            $table['uniqueConstraints'] = $this->prefixIndexes($classMetadata->getTableName(), $table['uniqueConstraints'], 'uniq');
+            $table['uniqueConstraints'] = $this->prefixIndexes($classMetadata->getTableName(), $table['uniqueConstraints'], 'key');
         }
 
         // add prefix to sequence
@@ -93,7 +93,7 @@ class TablePrefix
             return dechex(crc32($column));
         }, array_merge(array($tableName), $columnNames)));
 
-        return substr($this->prefix . $prefix . "_" . $hash, 0, $maxSize);
+        return strtoupper(substr($prefix . "_" . $hash, 0, $maxSize));
     }
 
     protected function _setIdGeneratorSequenceName(AbstractIdGenerator $idGenerator, $sequenceName)
