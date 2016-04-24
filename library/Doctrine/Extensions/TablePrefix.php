@@ -38,7 +38,7 @@ class TablePrefix
         $table = $classMetadata->table;
 
         if (isset($table['indexes'])) {
-            $table['indexes'] = $this->prefixIndexes($table['indexes'], 'idx');
+            $table['indexes'] = $this->prefixIndexes($classMetadata->getTableName(), $table['indexes'], 'idx');
         }
 
         // create uniqueConstraints from unique columns, so that properly prefixed
@@ -53,7 +53,7 @@ class TablePrefix
         }
 
         if (isset($table['uniqueConstraints'])) {
-            $table['uniqueConstraints'] = $this->prefixIndexes($table['uniqueConstraints'], 'uniq');
+            $table['uniqueConstraints'] = $this->prefixIndexes($classMetadata->getTableName(), $table['uniqueConstraints'], 'uniq');
         }
 
         // add prefix to sequence
@@ -67,14 +67,14 @@ class TablePrefix
         $classMetadata->table = $table;
     }
 
-    protected function prefixIndexes(array $array, $typePrefix)
+    protected function prefixIndexes($tableName, array $array, $typePrefix)
     {
         $prefixedArray = array();
 
         foreach ($array as $key => $value) {
             if (is_int($key)) {
                 // auto generate index name when not provided
-                $prefixedKey = $this->_generateIdentifierName($value['columns'], $typePrefix);
+                $prefixedKey = $this->_generateIdentifierName($tableName, $value['columns'], $typePrefix);
             } else {
                 $prefixedKey = $this->prefix . $key;
             }
@@ -87,11 +87,11 @@ class TablePrefix
         return $prefixedArray;
     }
 
-    protected function _generateIdentifierName($columnNames, $prefix = '', $maxSize = 30)
+    protected function _generateIdentifierName($tableName, $columnNames, $prefix = '', $maxSize = 30)
     {
         $hash = implode("", array_map(function($column) {
             return dechex(crc32($column));
-        }, $columnNames));
+        }, array_merge(array($tableName), $columnNames)));
 
         return substr($this->prefix . $prefix . "_" . $hash, 0, $maxSize);
     }
