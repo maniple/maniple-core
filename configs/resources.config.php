@@ -23,4 +23,15 @@
     'EntityManager.config' => array(
         'class' => 'ManipleCore\Doctrine\Config',
     ),
+
+    'mapperProvider' => array(
+        'callback' => 'ManipleCore_Service_DbFactory::createDbMapperProvider',
+    ),
+    'db.mapper_provider' => 'resource:mapperProvider',
+    'db.table_provider'  => array(
+        'callback' => 'ManipleCore_Service_DbFactory::createDbTableProvider',
+    ),
+    'db.adapter' => array(
+        'callback' => 'ManipleCore_Service_DbFactory::createDbAdapter',
+    ),
 );
