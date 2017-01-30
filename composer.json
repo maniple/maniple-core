@@ -1,6 +1,6 @@
 {
     "name": "maniple/maniple-core",
-    "type": "zefram-module",
+    "type": "zend1-module",
     "license": "MIT",
     "authors": [
         {
@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "xemlock/zefram-composer-installer": "*",
+        "xemlock/zend1-composer-installer": "*",
         "doctrine/orm": "^2.4",
         "symfony/yaml": "^2.7"
     },
