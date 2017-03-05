@@ -1,6 +1,6 @@
 <?php
 
-class ManipleCore_Service_DbFactory extends Maniple_Service_Factory
+class ManipleCore_Service_DbFactory
 {
     public static function factory($container)
     {
