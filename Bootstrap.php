@@ -4,7 +4,10 @@ class ManipleCore_Bootstrap extends Maniple_Application_Module_Bootstrap
 {
     protected $_moduleTasks = array('translations');
 
-    protected $_moduleDeps = array('maniple-vendor-assets');
+    public function getModuleDependencies()
+    {
+        return array('maniple-vendor-assets');
+    }
 
     public function onBootstrap(Maniple_Application_ModuleBootstrapper $moduleBootstraper)
     {
