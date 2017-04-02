@@ -8,7 +8,12 @@ abstract class ManipleCore_Service_NavigationManagerFactory
 
         /** @var Zend_View $view */
         $view = $container->getResource('View');
-        $view->getHelper('getNavigation')->setNavigationManager($manager);
+
+        $helper = new ManipleCore_View_Helper_GetNavigation();
+        $helper->setView($view);
+        $helper->setNavigationManager($manager);
+
+        $view->registerHelper($helper, 'getNavigation');
 
         return $manager;
     }
