@@ -225,7 +225,10 @@ class ManipleCore_Model_UserRepository implements ManipleCore_Model_UserReposito
     protected function _setUserFromRow(ManipleCore_Model_UserInterface $user, Zend_Db_Table_Row_Abstract $row)
     {
         // call reset() without warning on function result
-        $primaryKey = call_user_func('reset', $row->getPrimaryKey());
+        // $primaryKey = call_user_func('reset', $row->getPrimaryKey());
+        // The above hack doesn't work on PHP 7.0 - it results in NULL value
+        $primaryKey = $row->getPrimaryKey();
+        $primaryKey = reset($primaryKey);
 
         $user->setFromArray($row->toArray());
         $user->setId($primaryKey);
