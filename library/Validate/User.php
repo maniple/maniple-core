@@ -53,7 +53,7 @@ abstract class ManipleCore_Validate_User extends Zend_Validate_Abstract
 
     /**
      * @param  ManipleCore_Model_UserRepositoryInterface $userRepository
-     * @return Core_Validate_UserExists
+     * @return $this
      */
     public function setUserRepository(ManipleCore_Model_UserRepositoryInterface $userRepository)
     {
@@ -75,7 +75,7 @@ abstract class ManipleCore_Validate_User extends Zend_Validate_Abstract
 
     /**
      * @param  string $matchBy
-     * @return ManipleCore_Validate_UserExists
+     * @return $this
      * @throws InvalidArgumentException
      */
     public function setMatchBy($matchBy)
@@ -116,7 +116,7 @@ abstract class ManipleCore_Validate_User extends Zend_Validate_Abstract
      */
     protected function _getUserByValue($value)
     {
-	$user = null;
+	    $user = null;
 
         switch ($this->_matchBy) {
             case self::MATCH_ID:
@@ -139,8 +139,8 @@ abstract class ManipleCore_Validate_User extends Zend_Validate_Abstract
                 throw new RuntimeException(sprintf(
                     "Unsupported matchBy option value: '%s'", $this->_matchBy
                 ));
-	}
+	    }
 
-	return $user;
+	    return $user;
     }
 }
