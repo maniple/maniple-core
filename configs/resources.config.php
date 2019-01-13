@@ -34,4 +34,13 @@
     'db.adapter' => array(
         'callback' => 'ManipleCore_Service_DbFactory::createDbAdapter',
     ),
+
+    'Maniple.Queue' => array(
+        'class' => 'ManipleCore_Queue_Service',
+        'args'  => array(
+            'resource:Zefram_Db',
+            'resource:SharedEventManager',
+            'resource:Log',
+        ),
+    ),
 );
