@@ -23,6 +23,15 @@ class ManipleCore_Tool_Provider_QueueWorker extends Maniple_Tool_Provider_Abstra
 
         set_time_limit(0);
 
+        $logger = $application->getBootstrap()->getResource('Log');
+        if (!$logger) {
+            $logger = Zefram_Log::factory(array(
+                'registerErrorHandler' => true,
+            ));
+        }
+        $logger->addWriter(new Zend_Log_Writer_Stream('php://output'));
+
+        $queueService->setLogger($logger);
         $queueService->getEventManager()->attach('message', function (ManipleCore_Queue_MessageEvent $event) {
             echo '[message] Received message from queue: ', $event->getMessage()->getQueue()->getName(), "\n";
         });
