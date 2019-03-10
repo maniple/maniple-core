@@ -4,7 +4,7 @@ namespace ManipleCore\Doctrine\Service;
 
 abstract class EntityManagerFactory
 {
-    public static function factory(\Zefram_Application_ResourceContainer $container)
+    public static function factory(\Maniple_Application_ResourceContainer $container)
     {
         /** @var \ManipleCore\Doctrine\Config $config */
         $config = $container->getResource('EntityManager.config');
