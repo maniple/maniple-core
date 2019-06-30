@@ -4,7 +4,7 @@ namespace ManipleCore\Doctrine\Service;
 
 abstract class EntityManagerFactory
 {
-    public static function factory(\Maniple_Application_ResourceContainer $container)
+    public static function factory(\Maniple_Di_Container $container)
     {
         /** @var \ManipleCore\Doctrine\Config $config */
         $config = $container->getResource('EntityManager.config');
