@@ -15,7 +15,7 @@ class ManipleCore_View_Helper_FullName extends Zend_View_Helper_Abstract
         'midNameAttrib'   => 'midName',
     );
 
-    /** 
+    /**
      * @param  array $options
      * @return ManipleCore_View_Helper_FullName
      */
@@ -54,12 +54,12 @@ class ManipleCore_View_Helper_FullName extends Zend_View_Helper_Abstract
         if ($options['reverse']) {
             // eastern name order
             $fullName = $lastName
-                      . (strlen($midName)   ? ' ' . $midName   : '')
-                      . (strlen($firstName) ? ' ' . $firstName : '');
+                . (strlen($midName)   ? ' ' . $midName   : '')
+                . (strlen($firstName) ? ' ' . $firstName : '');
         } else {
             $fullName = $firstName
-                      . (strlen($midName)  ? ' ' . $midName  : '')
-                      . (strlen($lastName) ? ' ' . $lastName : '');
+                . (strlen($midName)  ? ' ' . $midName  : '')
+                . (strlen($lastName) ? ' ' . $lastName : '');
         }
 
         if ($options['escape']) {
@@ -84,8 +84,15 @@ class ManipleCore_View_Helper_FullName extends Zend_View_Helper_Abstract
             return $container[$attrib];
         }
 
-        if (is_object($container) && isset($container->{$attrib})) {
-            return $container->{$attrib};
+        if (is_object($container)) {
+            if (isset($container->{$attrib})) {
+                return $container->{$attrib};
+            }
+
+            $getter = 'get' . $attrib;
+            if (method_exists($container, $getter)) {
+                return $container->{$getter}();
+            }
         }
 
         return null;
