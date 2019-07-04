@@ -2,6 +2,8 @@
 
 class ManipleCore_Queue_Service
 {
+    const className = __CLASS__;
+
     /**
      * @var Zend_Queue_Adapter_AdapterInterface
      */
@@ -23,16 +25,13 @@ class ManipleCore_Queue_Service
     protected $_logger;
 
     /**
-     * @param Zefram_Db $db
+     * @param Zend_Queue_Adapter_AdapterInterface $adapter
      * @param Zend_EventManager_SharedEventManager $sharedEvents
      * @param Zend_Log $logger
      */
-    public function __construct(Zefram_Db $db, Zend_EventManager_SharedEventManager $sharedEvents, Zend_Log $logger = null)
+    public function __construct(Zend_Queue_Adapter_AdapterInterface $adapter, Zend_EventManager_SharedEventManager $sharedEvents, Zend_Log $logger = null)
     {
-        $this->_adapter = new ManipleCore_Queue_Adapter(array(
-            'dbAdapter' => $db->getAdapter(),
-            'tablePrefix' => $db->getTablePrefix(),
-        ));
+        $this->_adapter = $adapter;
 
         $this->_events = new Zend_EventManager_EventManager();
         $this->_events->setIdentifiers(array(
@@ -76,6 +75,7 @@ class ManipleCore_Queue_Service
      * Process messages from all queues
      *
      * @param int $maxMessages maximum number of messages to process
+     * @throws Zend_Queue_Exception
      */
     public function process($maxMessages = 1)
     {
@@ -136,6 +136,7 @@ class ManipleCore_Queue_Service
     /**
      * @param string $name
      * @return Zend_Queue
+     * @throws Zend_Queue_Exception
      */
     public function openQueue($name)
     {
@@ -151,7 +152,8 @@ class ManipleCore_Queue_Service
      *
      * @param string $queue  queue name
      * @param mixed $message message body
-     * @return $this         provides fluent interface
+     * @return $this
+     * @throws Zend_Queue_Exception
      */
     public function sendMessage($queue, $message)
     {
@@ -177,7 +179,8 @@ class ManipleCore_Queue_Service
      *
      * @param string|callable $queue queue name or message listener
      * @param callable $listener     message listener
-     * @return $this                 provides fluent interface
+     * @return $this
+     * @throws Zend_EventManager_Exception_InvalidArgumentException
      */
     public function addListener($queue, $listener = null)
     {

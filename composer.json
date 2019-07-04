@@ -9,11 +9,14 @@
         }
     ],
     "require": {
-        "xemlock/zend1-composer-installer": "*",
+        "xemlock/zend1-composer-installer": "^0.1.0",
         "doctrine/orm": "^2.4",
         "symfony/yaml": "^2.7"
     },
     "autoload": {
+        "classmap": [
+            "Bootstrap.php"
+        ],
         "psr-0": {
             "ManipleCore_": "library/"
         },

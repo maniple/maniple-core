@@ -36,11 +36,17 @@
     ),
 
     'Maniple.Queue' => array(
-        'class' => 'ManipleCore_Queue_Service',
+        'class' => ManipleCore_Queue_Service::className,
         'args'  => array(
-            'resource:Zefram_Db',
+            'resource:Maniple.QueueAdapter',
             'resource:SharedEventManager',
             'resource:Log',
+        ),
+    ),
+    'Maniple.QueueAdapter' => array(
+        'class' => ManipleCore_Queue_Adapter_DbTable::className,
+        'args' => array(
+            'resource:Zefram_Db',
         ),
     ),
 );

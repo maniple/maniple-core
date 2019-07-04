@@ -1,9 +1,25 @@
 <?php
 
-class ManipleCore_Queue_Adapter extends Zend_Queue_Adapter_Db
+class ManipleCore_Queue_Adapter_DbTable extends Zend_Queue_Adapter_Db
 {
+    const className = __CLASS__;
+
+    /**
+     * @param Zefram_Db|Zend_Config|array $options
+     * @param Zend_Queue|null $queue
+     * @throws Zend_Queue_Exception
+     */
     public function __construct($options, Zend_Queue $queue = null)
     {
+        if ($options instanceof Zefram_Db) {
+            $db = $options;
+            $options = array(
+                'dbAdapter'   => $db->getAdapter(),
+                'tablePrefix' => $db->getTablePrefix(),
+                // Zend_Db_Select::FOR_UPDATE =>
+            );
+        }
+
         if (isset($options['tablePrefix'])) {
             $tablePrefix = $options['tablePrefix'];
             unset($options['tablePrefix']);
@@ -47,10 +63,11 @@ class ManipleCore_Queue_Adapter extends Zend_Queue_Adapter_Db
     /**
      * Get messages in the queue
      *
-     * @param  integer    $maxMessages  Maximum number of messages to return
-     * @param  integer    $timeout      Lock timeout in seconds
+     * @param  integer $maxMessages Maximum number of messages to return
+     * @param  integer $timeout Lock timeout in seconds
      * @param  Zend_Queue $queue
      * @return Zend_Queue_Message_Iterator
+     * @throws
      */
     public function receive($maxMessages = null, $timeout = null, Zend_Queue $queue = null)
     {
