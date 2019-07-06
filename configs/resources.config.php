@@ -49,4 +49,18 @@
             'resource:Zefram_Db',
         ),
     ),
+
+    'ManipleCore_Settings_SettingsManager' => array(
+        'class' => ManipleCore_Settings_SettingsManager::className,
+        'args' => array(
+            'resource:ManipleCore_Settings_Adapter_DbTable',
+            'resource:SharedEventManager',
+        ),
+    ),
+    'ManipleCore_Settings_Adapter_DbTable' => array(
+        'class' => ManipleCore_Settings_Adapter_DbTable::className,
+        'args' => array(
+            'resource:Zefram_Db',
+        ),
+    ),
 );
