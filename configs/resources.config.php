@@ -53,12 +53,12 @@
     'ManipleCore_Settings_SettingsManager' => array(
         'class' => ManipleCore_Settings_SettingsManager::className,
         'args' => array(
-            'resource:ManipleCore_Settings_Adapter_DbTable',
+            'resource:ManipleCore_Settings_Adapter_Db',
             'resource:SharedEventManager',
         ),
     ),
-    'ManipleCore_Settings_Adapter_DbTable' => array(
-        'class' => ManipleCore_Settings_Adapter_DbTable::className,
+    'ManipleCore_Settings_Adapter_Db' => array(
+        'class' => ManipleCore_Settings_Adapter_Db::className,
         'args' => array(
             'resource:Zefram_Db',
         ),
