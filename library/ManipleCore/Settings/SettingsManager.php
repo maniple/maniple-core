@@ -33,7 +33,7 @@ class ManipleCore_Settings_SettingsManager
 
         $this->_events = new Zend_EventManager_EventManager();
         $this->_events->setIdentifiers(array(
-            'Maniple.SettingsManager',
+            self::className,
             get_class($this),
         ));
         $this->_events->setSharedCollections($sharedEventManager);

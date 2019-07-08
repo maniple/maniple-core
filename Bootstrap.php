@@ -4,7 +4,7 @@ class ManipleCore_Bootstrap extends Maniple_Application_Module_Bootstrap
 {
     public function getModuleDependencies()
     {
-        return array('maniple-vendor-assets');
+        return array();
     }
 
     public function getResourcesConfig()
