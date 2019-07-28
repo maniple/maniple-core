@@ -48,7 +48,7 @@ class ManipleCore_Bootstrap extends Maniple_Application_Module_Bootstrap
 
         $view = $application->getResource('view');
         $view->headScript()->appendScript(sprintf(
-            'require.config(%s)',
+            'window.require && require.config(%s)',
             Zefram_Json::encode(
                 array(
                     'paths' => array(
