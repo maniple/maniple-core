@@ -16,14 +16,6 @@
         'callback' => 'ManipleCore_Service_NavigationManagerFactory::factory',
     ),
 
-    'EntityManager' => array(
-        'callback' => 'ManipleCore\Doctrine\Service\EntityManagerFactory::factory',
-    ),
-
-    'EntityManager.config' => array(
-        'class' => 'ManipleCore\Doctrine\Config',
-    ),
-
     'mapperProvider' => array(
         'callback' => 'ManipleCore_Service_DbFactory::createDbMapperProvider',
     ),

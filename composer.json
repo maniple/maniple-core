@@ -9,9 +9,8 @@
         }
     ],
     "require": {
-        "xemlock/zend1-composer-installer": "^0.1.0",
-        "doctrine/orm": "^2.4",
-        "symfony/yaml": "^2.7"
+        "maniple/maniple": "*",
+        "xemlock/zend1-composer-installer": "^0.1.0"
     },
     "autoload": {
         "classmap": [
@@ -19,9 +18,26 @@
         ],
         "psr-0": {
             "ManipleCore_": "library/"
-        },
-        "psr-4": {
-            "ManipleCore\\": "library/"
         }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/maniple/maniple"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/xemlock/zefram"
+        }
+    ],
+    "extra": {
+        "installer-paths": {
+            "vendor/{$vendor}/{$name}": ["type:zend1-module"]
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
     }
 }
