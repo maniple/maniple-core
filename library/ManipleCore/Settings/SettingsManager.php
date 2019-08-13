@@ -201,4 +201,13 @@ class ManipleCore_Settings_SettingsManager
                 ));
         }
     }
+
+    /**
+     * @param string $name
+     * @return ManipleCore_Settings_Namespace
+     */
+    public function getNamespace($name)
+    {
+        return new ManipleCore_Settings_Namespace($this, $name);
+    }
 }
