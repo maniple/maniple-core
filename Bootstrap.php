@@ -17,6 +17,15 @@ class ManipleCore_Bootstrap extends Maniple_Application_Module_Bootstrap
         return require dirname(__FILE__) . '/configs/routes.config.php';
     }
 
+    public function getAutoloaderConfig()
+    {
+        return array(
+            'prefixes' => array(
+                'ManipleCore_' => __DIR__ . '/library/',
+            ),
+        );
+    }
+
     public function getTranslationsConfig()
     {
         return array(
@@ -47,6 +56,7 @@ class ManipleCore_Bootstrap extends Maniple_Application_Module_Bootstrap
         $application->bootstrap('view');
 
         $view = $application->getResource('view');
+
         $view->headScript()->appendScript(sprintf(
             'window.require && require.config(%s)',
             Zefram_Json::encode(
