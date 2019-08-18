@@ -48,28 +48,17 @@ class ManipleCore_Bootstrap extends Maniple_Application_Module_Bootstrap
         return 'core';
     }
 
-    protected function _initView()
+    /**
+     * If RequireJS service is available, register path to scripts.
+     *
+     * @see https://github.com/maniple/maniple-requirejs
+     * @return void
+     */
+    protected function _initRequireJS()
     {
-        $application = $this->getApplication();
-
-        $application->bootstrap('request');
-        $application->bootstrap('view');
-
-        $view = $application->getResource('view');
-
-        $view->headScript()->appendScript(sprintf(
-            'window.require && require.config(%s)',
-            Zefram_Json::encode(
-                array(
-                    'paths' => array(
-                        'maniple' => $view->baseUrl('/assets/core/js/maniple'),
-                    ),
-                ),
-                array(
-                    'unescapedSlashes' => true,
-                    'unescapedUnicode' => true,
-                )
-            )
-        ));
+        $requirejs = $this->getApplication()->getResource('RequireJS');
+        if ($requirejs) {
+            $requirejs->addPath('maniple', 'assets/core/js/maniple');
+        }
     }
 }
