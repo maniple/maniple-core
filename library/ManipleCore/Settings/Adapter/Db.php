@@ -5,7 +5,7 @@ class ManipleCore_Settings_Adapter_Db implements ManipleCore_Settings_Adapter_In
     const className = __CLASS__;
 
     /**
-     * @var ManipleCore_Model_Table_Settings
+     * @var ManipleCore_Model_DbTable_Settings
      */
     protected $_settingsTable;
 
@@ -24,7 +24,7 @@ class ManipleCore_Settings_Adapter_Db implements ManipleCore_Settings_Adapter_In
      */
     public function __construct(Zefram_Db $db)
     {
-        $this->_settingsTable = $db->getTable(ManipleCore_Model_Table_Settings::className);
+        $this->_settingsTable = $db->getTable(ManipleCore_Model_DbTable_Settings::className);
     }
 
     public function get($name, $default = null)
@@ -72,7 +72,6 @@ class ManipleCore_Settings_Adapter_Db implements ManipleCore_Settings_Adapter_In
         }
 
         $setting->value = $encodedValue;
-        $setting->saved_at = time();
         $setting->save();
 
         return $this;

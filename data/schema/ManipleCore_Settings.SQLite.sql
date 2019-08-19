@@ -3,10 +3,12 @@
  */
 CREATE TABLE /* PREFIX */settings (
 
-    name            VARCHAR(128) NOT NULL PRIMARY KEY,
+    setting_id      INTEGER NOT NULL PRIMARY KEY,
+
+    name            VARCHAR(191) NOT NULL,
 
     value           TEXT NOT NULL,
 
-    saved_at        INTEGER NOT NULL
+    CONSTRAINT settings_name_idx UNIQUE (name)
 
 );

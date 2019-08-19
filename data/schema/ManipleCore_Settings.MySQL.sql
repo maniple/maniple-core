@@ -3,10 +3,12 @@
  */
 CREATE TABLE /* PREFIX */settings (
 
-    name            VARCHAR(128) NOT NULL PRIMARY KEY,
+    setting_id      INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+
+    name            VARCHAR(191) NOT NULL,
 
     value           TEXT NOT NULL,
 
-    saved_at        INTEGER NOT NULL
+    CONSTRAINT settings_name_idx UNIQUE (name)
 
 ) ENGINE=InnoDB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
