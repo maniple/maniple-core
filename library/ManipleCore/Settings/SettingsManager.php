@@ -113,6 +113,10 @@ class ManipleCore_Settings_SettingsManager
             isset($this->_settings[$key]) ? $this->_settings[$key]['default'] : null
         );
 
+        if (isset($this->_settings[$key])) {
+            $value = $this->_coerceValue($this->_settings[$key]['type'], $value);
+        }
+
         return $value;
     }
 
@@ -135,7 +139,7 @@ class ManipleCore_Settings_SettingsManager
             ));
         }
 
-        $value = $this->_coerceValue($key, $value);
+        $value = $this->_coerceValue($this->_settings[$key]['type'], $value);
         $this->_adapter->set($key, $value);
 
         return $this;
@@ -162,7 +166,9 @@ class ManipleCore_Settings_SettingsManager
             return null;
         }
 
-        settype($value, $type);
+        if (settype($value, $type) === false) {
+            throw new InvalidArgumentException('Invalid type provided: ' . $type);
+        }
         return $value;
     }
 
