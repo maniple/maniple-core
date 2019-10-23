@@ -42,7 +42,7 @@ class ManipleCore_Service_DbFactory
     public static function createDbAdapter($container)
     {
         /** @var Zefram_Db $db */
-        $db = $container->ZeframDb;
+        $db = $container->Zefram_Db;
 
         return $db->getAdapter();
     }
@@ -54,7 +54,7 @@ class ManipleCore_Service_DbFactory
     public static function createDbMapperProvider($container)
     {
         /** @var Zefram_Db $db */
-        $db = $container->ZeframDb;
+        $db = $container->Zefram_Db;
         $mapperProvider = new Maniple_Model_Db_MapperProvider($db->getAdapter());
         $mapperProvider->getTableProvider()->setTablePrefix($db->getTablePrefix());
 
