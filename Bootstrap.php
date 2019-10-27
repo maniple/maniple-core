@@ -50,6 +50,17 @@ class ManipleCore_Bootstrap extends Maniple_Application_Module_Bootstrap
     }
 
     /**
+     * Setup view path spec
+     */
+    protected function _initViewRenderer()
+    {
+        /** @var Zefram_Controller_Action_Helper_ViewRenderer $viewRenderer */
+        $viewRenderer = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer');
+        $viewRenderer->setViewScriptPathSpec(':module/:controller/:action.:suffix', 'maniple-core');
+        $viewRenderer->setViewSuffix('twig', 'maniple-core');
+    }
+
+    /**
      * Initialize and configure errorHandler plugin
      *
      * @return void
@@ -77,14 +88,21 @@ class ManipleCore_Bootstrap extends Maniple_Application_Module_Bootstrap
     }
 
     /**
-     * Setup view path spec
+     * @throws Zend_Application_Bootstrap_Exception
      */
-    protected function _initViewRenderer()
+    protected function _initLogExtras()
     {
-        /** @var Zefram_Controller_Action_Helper_ViewRenderer $viewRenderer */
-        $viewRenderer = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer');
-        $viewRenderer->setViewScriptPathSpec(':module/:controller/:action.:suffix', 'maniple-core');
-        $viewRenderer->setViewSuffix('twig', 'maniple-core');
+        $bootstrap = $this->getApplication();
+        if (!$bootstrap->hasPluginResource('Log')) {
+            return;
+        }
+
+        /** @var Zend_Log $log */
+        $log = $bootstrap->bootstrap('Log')->getResource('Log');
+
+        /** @var Zend_Controller_Front $frontController */
+        $frontController = $bootstrap->bootstrap('FrontController')->getResource('FrontController');
+        $frontController->registerPlugin(new ManipleCore_Controller_Plugin_LogExtras($log));
     }
 
     /**
