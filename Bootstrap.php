@@ -110,10 +110,14 @@ class ManipleCore_Bootstrap extends Maniple_Application_Module_Bootstrap
      *
      * @see https://github.com/maniple/maniple-requirejs
      * @return void
+     * @throws Zend_Application_Bootstrap_Exception
      */
     protected function _initRequireJS()
     {
-        $requirejs = $this->getApplication()->getResource('RequireJS');
+        $bootstrap = $this->getApplication();
+        $bootstrap->bootstrap('View');
+
+        $requirejs = $bootstrap->getResource('RequireJS');
         if ($requirejs) {
             $requirejs->addPath('maniple', 'assets/core/js/maniple');
         }
