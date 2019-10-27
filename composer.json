@@ -9,6 +9,7 @@
         }
     ],
     "require": {
+        "php": ">=5.3.3",
         "maniple/maniple": "*",
         "xemlock/zend1-composer-installer": "^0.1.0"
     },

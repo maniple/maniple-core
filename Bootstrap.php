@@ -9,12 +9,12 @@ class ManipleCore_Bootstrap extends Maniple_Application_Module_Bootstrap
 
     public function getResourcesConfig()
     {
-        return require dirname(__FILE__) . '/configs/resources.config.php';
+        return require __DIR__ . '/configs/resources.config.php';
     }
 
     public function getRoutesConfig()
     {
-        return require dirname(__FILE__) . '/configs/routes.config.php';
+        return require __DIR__ . '/configs/routes.config.php';
     }
 
     public function getAutoloaderConfig()
@@ -30,16 +30,16 @@ class ManipleCore_Bootstrap extends Maniple_Application_Module_Bootstrap
     {
         return array(
             'scan'    => Zend_Translate::LOCALE_DIRECTORY,
-            'content' => dirname(__FILE__) . '/languages',
+            'content' => __DIR__ . '/languages',
         );
     }
 
     public function getViewConfig()
     {
         return array(
-            'scriptPaths' => dirname(__FILE__) . '/views/scripts',
+            'scriptPaths' => __DIR__ . '/views/scripts',
             'helperPaths' => array(
-                'ManipleCore_View_Helper_' => dirname(__FILE__) . '/library/View/Helper/',
+                'ManipleCore_View_Helper_' => __DIR__ . '/library/View/Helper/',
             ),
         );
     }
