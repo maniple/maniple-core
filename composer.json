@@ -14,7 +14,8 @@
     },
     "autoload": {
         "classmap": [
-            "Bootstrap.php"
+            "Bootstrap.php",
+            "controllers/"
         ],
         "psr-0": {
             "ManipleCore_": "library/"
@@ -28,7 +29,7 @@
             "url": "https://github.com/maniple/maniple"
         },
         {
-            "type": "vcs",
+            "type": "git",
             "url": "https://github.com/xemlock/zefram"
         }
     ],
