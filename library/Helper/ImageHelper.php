@@ -60,13 +60,14 @@ class ManipleCore_Helper_ImageHelper
      *
      * @param  array|string $dimensions
      * @return ManipleCore_Helper_ImageHelper
+     * @throws Maniple_Controller_Exception_BadRequest
      */
     public function setAllowedDimensions($dimensions) // {{{
     {
         $allowedDimensions = array();
         foreach ((array) $dimensions as $value) {
             if (!preg_match('/^(?P<width>\d+)x(?P<height>\d+)$/i', $value, $match)) {
-                throw new InvalidArgumentException(sprintf('Invalid dimension spec: %s', $value));
+                throw new Maniple_Controller_Exception_BadRequest(sprintf('Invalid dimension spec: %s', $value));
             }
             $allowedDimensions[] = $match['width'] . 'x' . $match['height'];
         }
@@ -190,7 +191,7 @@ class ManipleCore_Helper_ImageHelper
             return $path;
         }
 
-        throw new Maniple_Controller_NotFoundException('Image file not found');
+        throw new Maniple_Controller_Exception_NotFound('Image file not found');
     } // }}}
 
     /**
