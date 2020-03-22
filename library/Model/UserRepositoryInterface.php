@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @deprecated
+ */
 interface ManipleCore_Model_UserRepositoryInterface
 {
     public function getUser($userId);

@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @deprecated
+ */
 class ManipleCore_Model_DbTable_Users extends Zefram_Db_Table
 {
     /**

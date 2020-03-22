@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @deprecated
+ */
 class ManipleCore_Model_User extends Maniple_Model_Model implements ManipleCore_Model_UserInterface
 {
     /**

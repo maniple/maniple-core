@@ -7,6 +7,7 @@
  * @version 2014-07-05
  * @uses    Zend_Db_Table
  * @uses    Zefram_Stdlib
+ * @deprecated
  */
 class ManipleCore_Model_UserRepository implements ManipleCore_Model_UserRepositoryInterface
 {
