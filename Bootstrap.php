@@ -109,17 +109,14 @@ class ManipleCore_Bootstrap extends Maniple_Application_Module_Bootstrap
      * If RequireJS service is available, register path to scripts.
      *
      * @see https://github.com/maniple/maniple-requirejs
-     * @return void
-     * @throws Zend_Application_Bootstrap_Exception
+     * @return array
      */
-    protected function _initRequireJS()
+    public function getRequireJsConfig()
     {
-        $bootstrap = $this->getApplication();
-        $bootstrap->bootstrap('View');
-
-        $requirejs = $bootstrap->getResource('RequireJS');
-        if ($requirejs) {
-            $requirejs->addPath('maniple', 'assets/core/js/maniple');
-        }
+        return array(
+            'paths' => array(
+                'maniple' => 'assets/core/js/maniple',
+            ),
+        );
     }
 }
