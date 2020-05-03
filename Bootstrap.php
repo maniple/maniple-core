@@ -105,6 +105,13 @@ class ManipleCore_Bootstrap extends Maniple_Application_Module_Bootstrap
         $frontController->registerPlugin(new ManipleCore_Controller_Plugin_LogExtras($log));
     }
 
+    protected function _initViewAssets()
+    {
+        /** @var Zend_View $view */
+        $view = $this->getApplication()->bootstrap('View')->getResource('View');
+        $view->headLink()->appendStylesheet($view->baseUrl('assets/core/css/modal.css'));
+    }
+
     /**
      * If RequireJS service is available, register path to scripts.
      *

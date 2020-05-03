@@ -1,0 +1,29 @@
+.maniple-dialog-overlay {
+    background: #000000;
+    opacity: .5;
+}
+.maniple-modal {
+    background: none repeat scroll 0 0 #FFFFFF;
+    box-shadow: 0 0 10px #444444;
+    padding: 16px;
+}
+.maniple-modal-header {
+    padding: 0;
+    margin: 0;
+}
+.maniple-modal-body {
+    margin: 16px 0;
+}
+.maniple-modal-footer button {
+    font-size: 14px;
+    cursor: pointer;
+}
+.maniple-modal-footer button.btn-primary {
+    background: none repeat scroll 0 0 #7C639F;
+    border: 1px solid #633B88;
+    color: #FFFFFF;
+}
+.maniple-modal-footer button.btn-primary:hover {
+    background: none repeat scroll 0 0 #AD87D1;
+    border-color: #7C639F;
+}
